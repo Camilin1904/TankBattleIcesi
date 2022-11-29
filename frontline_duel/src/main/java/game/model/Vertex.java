@@ -1,6 +1,8 @@
+package game.model;
+
 import java.util.*;
 
-public class Vertex<I, T> {
+public class Vertex<I extends Comparable<I>, T> implements Comparable<Vertex<I,T>>{
     private I id;
     private T value;
     private Pair<Vertex<I, T>,Integer> up;
@@ -13,16 +15,21 @@ public class Vertex<I, T> {
     private int color;
     private int initial;
     private int end;
+    private int type = 1;
+    private int oCol;
+    private boolean hasKey;
     
     public Vertex(T value){
         this.value = value;
         adyacentVertex = new ArrayList<>();
+        hasKey = false;
     }
 
     public Vertex(I id, T value){
         this.id = id;
         this.value = value;
         adyacentVertex = new ArrayList<>();
+        hasKey = false;
     }
 
     public void setValue(T value) {
@@ -51,8 +58,7 @@ public class Vertex<I, T> {
     public Pair<Vertex<I, T>,Integer> getDown() {
         return down;
     }
-    public void setDown(Pair<Vertex<I, T>,Integer> down) {
-        adyacentVertex.remove(this.down);
+    public void setDown(Pair<Vertex<I, T>,Integer> down) {;
         this.down = down;
         adyacentVertex.add(down);
     }
@@ -60,7 +66,6 @@ public class Vertex<I, T> {
         return left;
     }
     public void setLeft(Pair<Vertex<I, T>,Integer> left) {
-        adyacentVertex.remove(this.left);
         this.left = left;
         adyacentVertex.add(left);
     }
@@ -68,7 +73,6 @@ public class Vertex<I, T> {
         return right;
     }
     public void setRight(Pair<Vertex<I, T>,Integer> right) {
-        adyacentVertex.remove(this.right);
         this.right = right;
         adyacentVertex.add(right);
     }
@@ -76,7 +80,6 @@ public class Vertex<I, T> {
         return up;
     }
     public void setUp(Pair<Vertex<I, T>,Integer> up) {
-        adyacentVertex.remove(this.up);
         this.up = up;
         adyacentVertex.add(up);
     }
@@ -110,7 +113,7 @@ public class Vertex<I, T> {
 
     @Override
     public String toString() {
-        return value.toString();
+        return id.toString();
     }
 
     public I getId() {
@@ -118,6 +121,33 @@ public class Vertex<I, T> {
     }
     public void setId(I id) {
         this.id = id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    @Override
+    public int compareTo(Vertex<I, T> o) {
+        return id.compareTo(o.getId());
+    }
+
+    public int getoCol() {
+        return oCol;
+    }
+    public void setoCol(int oCol) {
+        this.oCol = oCol;
+    }
+
+    public void setHasKey(boolean hasKey) {
+        this.hasKey = hasKey;
+    }
+    public boolean getHasKey(){
+        return hasKey;
     }
 
 }

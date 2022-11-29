@@ -1,3 +1,5 @@
+package game.model;
+
 public class Pair <A,B> {
 
     private A a;
@@ -18,5 +20,9 @@ public class Pair <A,B> {
     }
     public void setB(B b) {
         this.b = b;
+    }
+    @Override
+    public String toString() {
+        return "{" + a.toString() + "," + b.toString() + "}";
     }
 }
