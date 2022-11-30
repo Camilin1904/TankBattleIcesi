@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.net.URL;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
@@ -30,6 +31,7 @@ public class PrimaryController implements Initializable {
     @FXML
     private Canvas canvas;
     private GraphicsContext gc;
+
     private boolean isRunning = true;
 
 
@@ -43,15 +45,15 @@ public class PrimaryController implements Initializable {
     boolean Apressed = false;
     boolean Spressed = false;
     boolean Dpressed = false;
-
     boolean Fpressed = false;
+    boolean Gpressed = false;
 
     boolean UPpressed = false;
     boolean DOWNpressed = false;
     boolean RIGTHpressed = false;
     boolean LEFTpressed = false;
-
     boolean SPACEpressed = false;
+    boolean Mpressed = false;
 
     boolean shotPlayer1 = false;
 
@@ -74,6 +76,13 @@ public class PrimaryController implements Initializable {
     String uri = "file:"+FrontlineDuel.class.getResource("boom.png").getPath();
     Image image = new Image(uri);
 
+    private String fondo = "file:"+FrontlineDuel.class.getResource("Fondo.jpeg").getPath();
+
+    private Image fon = new Image(fondo);
+
+    private ArrayList<Obstacle> map1 = new ArrayList<>();
+
+    private ArrayList<Obstacle> map2 = new ArrayList<>();
 
 
     @Override
@@ -107,9 +116,30 @@ public class PrimaryController implements Initializable {
 
         avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100);
         avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300);
-        enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 250);
+        initializedMap1();
+        initializedMap2();
+        selectMap();
 
-        draw();
+
+    }
+
+    public void selectMap(){
+
+        int map = (int) (Math.random() * 2 + 1);
+        switch (map){
+            case 1:
+                draw(map1);
+                break;
+            case 2:
+                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 250);
+
+        draw(map2);
+                break;
+            case 3:
+                //draw(map3);
+                break;
+        }
+
     }
 
     private void onKeyReleased(KeyEvent keyEvent) {
@@ -131,6 +161,9 @@ public class PrimaryController implements Initializable {
         if(keyEvent.getCode() == KeyCode.SPACE){
             SPACEpressed = false;
         }
+        if(keyEvent.getCode() == KeyCode.M){
+            Mpressed = false;
+        }
         if(keyEvent.getCode() == KeyCode.UP){
             UPpressed = false;
         }
@@ -145,17 +178,18 @@ public class PrimaryController implements Initializable {
         }
     }
 
+
     private void onKeyPressed(KeyEvent keyEvent) {
         System.out.println(keyEvent.getCode());
         if(keyEvent.getCode() == KeyCode.W){
             Wpressed = true;
-            Fpressed = false;
+            Apressed = false;
             WmomentumCounter = MOVEMENT_CONSTANT;
         }
         if(keyEvent.getCode() == KeyCode.A){
             Apressed = true;
-            AmomentumCounter = -TURN_CONSTANT;
             Dpressed = false;
+            DmomentumCounter = -TURN_CONSTANT;
         }
         if(keyEvent.getCode() == KeyCode.S){
             Spressed = true;
@@ -169,21 +203,6 @@ public class PrimaryController implements Initializable {
         }
         if(keyEvent.getCode() == KeyCode.F){
             if(shotPlayer2) {
-                    synchronized(Thread.currentThread()){
-                        try{
-                            Thread.sleep(50);
-                        }
-                        catch(Exception e){
-                            JOptionPane.showMessageDialog(null, "Wut");
-                        }
-                        
-                    }
-            }
-            Fpressed = true;
-
-        }
-        if(keyEvent.getCode() == KeyCode.SPACE){
-            if(!shotPlayer1) {
                 synchronized(Thread.currentThread()){
                     try{
                         Thread.sleep(50);
@@ -191,10 +210,66 @@ public class PrimaryController implements Initializable {
                     catch(Exception e){
                         JOptionPane.showMessageDialog(null, "Wut");
                     }
-                    
+
+                }
+            }
+            Fpressed = true;
+            if(!shotPlayer1){
+                avatar.setShotRight();
+            }
+
+        }
+        if(keyEvent.getCode() == KeyCode.G){
+            if(shotPlayer2) {
+                synchronized(Thread.currentThread()){
+                    try{
+                        Thread.sleep(50);
+                    }
+                    catch(Exception e){
+                        JOptionPane.showMessageDialog(null, "Wut");
+                    }
+
+                }
+            }
+            Gpressed = true;
+            if(!shotPlayer1){
+                avatar.setShotLeft();
+            }
+        }
+        if(keyEvent.getCode() == KeyCode.SPACE){
+            if(shotPlayer1) {
+                synchronized(Thread.currentThread()){
+                    try{
+                        Thread.sleep(50);
+                    }
+                    catch(Exception e){
+                        JOptionPane.showMessageDialog(null, "Wut");
+                    }
+
                 }
             }
             SPACEpressed = true;
+            if(!shotPlayer2){
+                avatar2.setShotRight();
+            }
+
+        }
+        if(keyEvent.getCode() == KeyCode.M){
+            if(shotPlayer1) {
+                synchronized(Thread.currentThread()){
+                    try{
+                        Thread.sleep(50);
+                    }
+                    catch(Exception e){
+                        JOptionPane.showMessageDialog(null, "Wut");
+                    }
+
+                }
+            }
+            Mpressed = true;
+            if(!shotPlayer2){
+                avatar2.setShotLeft();
+            }
         }
         if(keyEvent.getCode() == KeyCode.UP){
             UPpressed = true;
@@ -222,67 +297,110 @@ public class PrimaryController implements Initializable {
         avatar.setPosition(mouseEvent.getX(), mouseEvent.getY());
     }
 
-    public void draw(){
+    public void draw(ArrayList<Obstacle> map){
         new Thread(
                 ()->{
                     while(isRunning){
                         //Dibujo
                         Platform.runLater(()->{
-                            gc.setFill(Color.BLACK);
-                            gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
+                            drawBackground();
                             avatar.draw();
                             avatar2.draw();
+                            drawMap(map);
                             enemyAvatar.draw();
                             if(avatar.getLives()>0){
+                                if(Wpressed||WmomentumCounter>0){
+                                    if(!avatar.checkObstacleX(map1)&&!avatar.checkAvatar(avatar2)) {
 
-                                if(Wpressed||WmomentumCounter>0){                                    
-                                    avatar.moveForward(WmomentumCounter/MOVEMENT_CONSTANT);
-                                    WmomentumCounter = Wpressed? MOVEMENT_CONSTANT: WmomentumCounter-0.1;
+                                        avatar.moveForward(WmomentumCounter / MOVEMENT_CONSTANT);
+                                        WmomentumCounter = Wpressed ? MOVEMENT_CONSTANT : WmomentumCounter - 0.1;
+
+                                    }else {
+                                        double variable = 1.5;
+                                        avatar.moveBackward(variable);
+                                        WmomentumCounter = 0;
+                                    }
+
                                 }
                                 if(Apressed||AmomentumCounter<0){
                                     avatar.changeAngle(AmomentumCounter);
-                                    AmomentumCounter = Apressed?-TURN_CONSTANT:AmomentumCounter+0.1;
+                                    AmomentumCounter = Apressed? -TURN_CONSTANT : AmomentumCounter + 0.1;
                                 }
                                 if(Spressed||SmomentumCounter>0){
-                                    avatar.moveBackward(SmomentumCounter/MOVEMENT_CONSTANT);
-                                    SmomentumCounter = Spressed? MOVEMENT_CONSTANT: SmomentumCounter-0.1;
+
+                                    if(!avatar.checkObstacleX(map1)&&!avatar.checkAvatar(avatar2)) {
+                                        avatar.moveBackward(SmomentumCounter/MOVEMENT_CONSTANT);
+                                        SmomentumCounter = Spressed? MOVEMENT_CONSTANT: SmomentumCounter-0.1;
+                                    }else {
+                                        double variable = 1.5;
+                                        avatar.moveBackward(variable);
+                                        SmomentumCounter = 0;
+                                    }
+
                                 }
                                 if(Dpressed||DmomentumCounter>0){
                                     avatar.changeAngle(DmomentumCounter);
                                     DmomentumCounter = Dpressed?TURN_CONSTANT:DmomentumCounter-0.1;
                                     
                                 }
-                                if(Fpressed&&!shotPlayer1){
-                                    avatar.setShot();
-                                    drawShot(avatar, avatar2,1);
-                                    shotPlayer1 = true;
+                                if(Fpressed||shotPlayer1){
+                                    if((avatar.getPosShot().x<=canvas.getWidth()&&avatar.getPosShot().y<=canvas.getHeight())&&(avatar.getPosShot().x>=0&&avatar.getPosShot().y>=0)){
+                                        drawShot(avatar, avatar2,1);
+                                    }
                                     Fpressed=false;
-                                    avatar.setShot();
+                                }
+                                if(Gpressed||shotPlayer1){
+                                    if((avatar.getPosShot().x<=canvas.getWidth()&&avatar.getPosShot().y<=canvas.getHeight())&&(avatar.getPosShot().x>=0&&avatar.getPosShot().y>=0)){
+                                        drawShot(avatar, avatar2,1);
+                                    }
+                                    Gpressed=false;
                                 }
                             }
                             if(avatar2.getLives()>0){
                                 if(UPpressed||UPmomentumCounter>0){
-                                    avatar2.moveForward(UPmomentumCounter/MOVEMENT_CONSTANT);
-                                    UPmomentumCounter = UPpressed? MOVEMENT_CONSTANT : UPmomentumCounter-0.1;
+                                    if(!avatar2.checkObstacleX(map1)&&!avatar2.checkAvatar(avatar)) {
+
+                                        avatar2.moveForward(UPmomentumCounter / MOVEMENT_CONSTANT);
+                                        UPmomentumCounter = UPpressed ? MOVEMENT_CONSTANT : UPmomentumCounter - 0.1;
+
+                                    }else {
+                                        double variable = 1.5;
+                                            avatar2.moveBackward(variable);
+                                            UPmomentumCounter = 0;
+                                    }
                                 }
                                 if(LEFTpressed||LEFTmomentumCounter<0){
                                     avatar2.changeAngle(LEFTmomentumCounter);
                                     LEFTmomentumCounter = LEFTpressed? -TURN_CONSTANT : LEFTmomentumCounter + 0.1;
                                 }
                                 if(DOWNpressed||DOWNmomentumCounter>0){
-                                    avatar2.moveBackward(DOWNmomentumCounter/MOVEMENT_CONSTANT);
+                                    if(!avatar2.checkObstacleX(map1)&&!avatar2.checkAvatar(avatar)) {
+
+                                        avatar2.moveBackward(DOWNmomentumCounter/MOVEMENT_CONSTANT);
                                     DOWNmomentumCounter = DOWNpressed? MOVEMENT_CONSTANT : DOWNmomentumCounter-0.1;
+
+                                    }else {
+                                        double variable = 1.5;
+                                        avatar2.moveForward(variable);
+                                        DOWNmomentumCounter=0;
+                                    }
+
                                 }
                                 if(RIGTHpressed||RIGHTmomentumCounter>0){
                                     avatar2.changeAngle(RIGHTmomentumCounter);
                                     RIGHTmomentumCounter = RIGTHpressed? TURN_CONSTANT : RIGHTmomentumCounter-0.1;
                                 }
-                                if(SPACEpressed&&!shotPlayer2){
-                                    avatar2.setShot();
-                                    drawShot(avatar2, avatar,2);
-                                    shotPlayer2=true;
+                                if(SPACEpressed||shotPlayer2){
+                                    if((avatar2.getPosShot().x<=canvas.getWidth()&&avatar2.getPosShot().y<=canvas.getHeight())&&(avatar2.getPosShot().x>=0&&avatar2.getPosShot().y>=0)){
+                                        drawShot(avatar2, avatar,2);
+                                    }
                                     SPACEpressed=false;
-                                    avatar2.setShot();
+                                }
+                                if(Mpressed||shotPlayer2){
+                                    if((avatar2.getPosShot().x<=canvas.getWidth()&&avatar2.getPosShot().y<=canvas.getHeight())&&(avatar2.getPosShot().x>=0&&avatar2.getPosShot().y>=0)){
+                                        drawShot(avatar2, avatar,2);
+                                    }
+                                    Mpressed=false;
                                 }
                             }
 
@@ -305,60 +423,130 @@ public class PrimaryController implements Initializable {
 
     private void drawShot(Avatar avatarWhoShot, Avatar avatarShoted, int player){
 
-        boolean draw=true;
+        if(player==1)shotPlayer1=true;
+        if(player==2)shotPlayer2=true;
 
-        if(player==1&& shotPlayer1)draw=false;
-        if(player==2&& shotPlayer2)draw=false;
+        boolean shot = true;
+        avatarWhoShot.shot();
+        avatarWhoShot.moveForwardShot();
 
-        Runnable runnable = () -> {
-            boolean shot = true;
-            while(shot&&(avatarWhoShot.getPosShot().x<=canvas.getWidth()&&avatarWhoShot.getPosShot().y<=canvas.getHeight())&&(avatarWhoShot.getPosShot().x>=0&&avatarWhoShot.getPosShot().y>=0)){
-                avatarWhoShot.shot();
-                avatarWhoShot.moveForwardShot();
-
-                if(avatarWhoShot.getPosShot().x<=avatarShoted.getPos().x+25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
-                        avatarWhoShot.getPosShot().x>=avatarShoted.getPos().x-25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
-                        avatarWhoShot.getPosShot().y-25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))<=avatarShoted.getPos().y&&
-                        avatarWhoShot.getPosShot().y+25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))>=avatarShoted.getPos().y){
-                    shot = false;
-                }
-                try {
-                    synchronized (Thread.currentThread()){
-                        Thread.currentThread().wait(20);
-                    }
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if(!shot&&avatarShoted.getLives()>0){
-                avatarShoted.impact();
-                long times = System.currentTimeMillis();
-                while(System.currentTimeMillis()<times+50){
-                    gc.drawImage(image,avatarShoted.getPos().x - 25 ,avatarShoted.getPos().y - 25, 50,50);
-                    try {
-                        synchronized (Thread.currentThread()){
-                            Thread.currentThread().wait(10);
-                        }
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-            if(player==1)shotPlayer1=false;
-            if(player==2)shotPlayer2=false;
-            Thread.currentThread().interrupt();
-        };
-
-        if(draw){
-            Thread thread = new Thread(runnable);
-
-            thread.start();
+        if((avatarWhoShot.getPosShot().x>canvas.getWidth()||avatarWhoShot.getPosShot().y>canvas.getHeight())||(avatarWhoShot.getPosShot().x<0||avatarWhoShot.getPosShot().y<0)){
             if(player==1)shotPlayer1=false;
             if(player==2)shotPlayer2=false;
         }
 
+        if(avatarWhoShot.getPosShot().x<=avatarShoted.getPos().x+25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
+                avatarWhoShot.getPosShot().x>=avatarShoted.getPos().x-25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
+                avatarWhoShot.getPosShot().y-25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))<=avatarShoted.getPos().y&&
+                avatarWhoShot.getPosShot().y+25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))>=avatarShoted.getPos().y){
+            shot = false;
+            if(player==1)shotPlayer1=false;
+            if(player==2)shotPlayer2=false;
+        }
+        if(!shot&&avatarShoted.getLives()>0){
+            avatarShoted.impact();
+            long times = System.currentTimeMillis();
+            gc.drawImage(image,avatarShoted.getPos().x - 25 ,avatarShoted.getPos().y - 25, 50,50);
+        }
 
 
+
+    }
+
+    public void initializedMap1(){
+        Obstacle ob = new Obstacle(175,125,50,canvas);
+        Obstacle ob2 = new Obstacle(175,250,50,canvas);
+        Obstacle ob3 = new Obstacle(175,375,50,canvas);
+        Obstacle ob4 = new Obstacle(175,500,50,canvas);
+        Obstacle ob5 = new Obstacle(475,125,50,canvas);
+        Obstacle ob6 = new Obstacle(475,250,50,canvas);
+        Obstacle ob7 = new Obstacle(475,375,50,canvas);
+        Obstacle ob8 = new Obstacle(475,500,50,canvas);
+        Obstacle ob9 = new Obstacle(475,625,50,canvas);
+        Obstacle ob10 = new Obstacle(175,625,50,canvas);
+        map1.add(ob);
+        map1.add(ob2);
+        map1.add(ob3);
+        map1.add(ob4);
+        map1.add(ob5);
+        map1.add(ob6);
+        map1.add(ob7);
+        map1.add(ob8);
+        map1.add(ob9);
+        map1.add(ob10);
+    }
+
+    public void initializedMap2(){
+        //ESI
+        Obstacle ob5 = new Obstacle(0,250,50,canvas);
+        Obstacle ob8 = new Obstacle(50,250,50,canvas);
+        Obstacle ob10 = new Obstacle(100,250,50,canvas);
+
+        Obstacle ob6 = new Obstacle(250,0,50,canvas);
+        Obstacle ob7 = new Obstacle(250,50,50,canvas);
+        Obstacle ob9 = new Obstacle(250,100,50,canvas);
+        //ESD
+        Obstacle ob = new Obstacle(550,250,50,canvas);
+        Obstacle ob2 = new Obstacle(600,250,50,canvas);
+        Obstacle ob3 = new Obstacle(650,250,50,canvas);
+
+        Obstacle ob4 = new Obstacle(400,0,50,canvas);
+        Obstacle ob11 = new Obstacle(400,50,50,canvas);
+        Obstacle ob12 = new Obstacle(400,100,50,canvas);
+
+
+        //EII
+        Obstacle ob13 = new Obstacle(0,400,50,canvas);
+        Obstacle ob14 = new Obstacle(50,400,50,canvas);
+        Obstacle ob15 = new Obstacle(100,400,50,canvas);
+
+        Obstacle ob16 = new Obstacle(250,650,50,canvas);
+        Obstacle ob17 = new Obstacle(250,600,50,canvas);
+        Obstacle ob18 = new Obstacle(250,550,50,canvas);
+        //EID
+        Obstacle ob19 = new Obstacle(550,400,50,canvas);
+        Obstacle ob20 = new Obstacle(600,400,50,canvas);
+        Obstacle ob21 = new Obstacle(650,400,50,canvas);
+
+        Obstacle ob22 = new Obstacle(400,650,50,canvas);
+        Obstacle ob23 = new Obstacle(400,600,50,canvas);
+        Obstacle ob24 = new Obstacle(400,550,50,canvas);
+
+        map2.add(ob);
+        map2.add(ob2);
+        map2.add(ob3);
+        map2.add(ob4);
+        map2.add(ob5);
+        map2.add(ob6);
+        map2.add(ob7);
+        map2.add(ob8);
+        map2.add(ob9);
+        map2.add(ob10);
+        map2.add(ob11);
+        map2.add(ob12);
+        map2.add(ob13);
+        map2.add(ob14);
+        map2.add(ob15);
+        map2.add(ob16);
+        map2.add(ob17);
+        map2.add(ob18);
+        map2.add(ob19);
+        map2.add(ob20);
+        map2.add(ob21);
+        map2.add(ob22);
+        map2.add(ob23);
+        map2.add(ob24);
+
+    }
+    public void drawMap(ArrayList<Obstacle> array){
+        for(int i = 0; i<array.size();i++){
+            array.get(i).draw();
+        }
+    }
+    public void drawBackground(){
+        gc.save();
+        gc.drawImage(fon, 0, 0, 700, 700);
+        gc.restore();
     }
 
 }
