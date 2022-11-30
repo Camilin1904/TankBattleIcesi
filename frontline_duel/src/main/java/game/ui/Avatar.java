@@ -81,6 +81,12 @@ public class Avatar {
 
     }
 
+    public boolean checkAvatar(Avatar avatar){
+
+        return shape.intersects(avatar.pos.x,avatar.pos.y, Math.cos(Math.toRadians(avatar.pos.getAngle()))*50, Math.sin(Math.toRadians(avatar.pos.getAngle()))*50);
+
+    }
+
     public void moveForward(double mult){
 
         if(pos.x + direction.x*mult-25>0 && pos.x + direction.x*mult+25<700 ){
@@ -108,13 +114,22 @@ public class Avatar {
 
     }
 
-    public void setShot(){
+    public void setShotRight(){
         double amp = direction.getAmplitude();
         double angle = direction.getAngle();
         posShot.x = pos.x;
         posShot.y = pos.y;
         directShot.x = amp*Math.cos(Math.toRadians(angle) + (Math.PI/2));
         directShot.y = amp*Math.sin(Math.toRadians(angle) + (Math.PI/2));
+    }
+
+    public void setShotLeft(){
+        double amp = direction.getAmplitude();
+        double angle = direction.getAngle();
+        posShot.x = pos.x;
+        posShot.y = pos.y;
+        directShot.x = amp*Math.cos(Math.toRadians(angle) - (Math.PI/2));
+        directShot.y = amp*Math.sin(Math.toRadians(angle) - (Math.PI/2));
     }
 
     public void shot(){

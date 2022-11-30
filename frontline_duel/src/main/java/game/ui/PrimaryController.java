@@ -40,15 +40,15 @@ public class PrimaryController implements Initializable {
     boolean Apressed = false;
     boolean Spressed = false;
     boolean Dpressed = false;
-
     boolean Fpressed = false;
+    boolean Gpressed = false;
 
     boolean UPpressed = false;
     boolean DOWNpressed = false;
     boolean RIGTHpressed = false;
     boolean LEFTpressed = false;
-
     boolean SPACEpressed = false;
+    boolean Mpressed = false;
 
     boolean shotPlayer1 = false;
 
@@ -109,6 +109,9 @@ public class PrimaryController implements Initializable {
         if(keyEvent.getCode() == KeyCode.SPACE){
             SPACEpressed = false;
         }
+        if(keyEvent.getCode() == KeyCode.M){
+            Mpressed = false;
+        }
         if(keyEvent.getCode() == KeyCode.UP){
             UPpressed = false;
         }
@@ -127,13 +130,13 @@ public class PrimaryController implements Initializable {
         System.out.println(keyEvent.getCode());
         if(keyEvent.getCode() == KeyCode.W){
             Wpressed = true;
-            Fpressed = false;
+            Apressed = false;
             WmomentumCounter = MOVEMENT_CONSTANT;
         }
         if(keyEvent.getCode() == KeyCode.A){
             Apressed = true;
-            AmomentumCounter = -TURN_CONSTANT;
-            Dpressed = false;
+            Wpressed = false;
+            AmomentumCounter = MOVEMENT_CONSTANT;
         }
         if(keyEvent.getCode() == KeyCode.S){
             Spressed = true;
@@ -147,21 +150,6 @@ public class PrimaryController implements Initializable {
         }
         if(keyEvent.getCode() == KeyCode.F){
             if(shotPlayer2) {
-                    synchronized(Thread.currentThread()){
-                        try{
-                            Thread.sleep(50);
-                        }
-                        catch(Exception e){
-                            JOptionPane.showMessageDialog(null, "Wut");
-                        }
-                        
-                    }
-            }
-            Fpressed = true;
-
-        }
-        if(keyEvent.getCode() == KeyCode.SPACE){
-            if(!shotPlayer1) {
                 synchronized(Thread.currentThread()){
                     try{
                         Thread.sleep(50);
@@ -169,10 +157,66 @@ public class PrimaryController implements Initializable {
                     catch(Exception e){
                         JOptionPane.showMessageDialog(null, "Wut");
                     }
-                    
+
+                }
+            }
+            Fpressed = true;
+            if(!shotPlayer1){
+                avatar.setShotRight();
+            }
+
+        }
+        if(keyEvent.getCode() == KeyCode.G){
+            if(shotPlayer2) {
+                synchronized(Thread.currentThread()){
+                    try{
+                        Thread.sleep(50);
+                    }
+                    catch(Exception e){
+                        JOptionPane.showMessageDialog(null, "Wut");
+                    }
+
+                }
+            }
+            Gpressed = true;
+            if(!shotPlayer1){
+                avatar.setShotLeft();
+            }
+        }
+        if(keyEvent.getCode() == KeyCode.SPACE){
+            if(shotPlayer1) {
+                synchronized(Thread.currentThread()){
+                    try{
+                        Thread.sleep(50);
+                    }
+                    catch(Exception e){
+                        JOptionPane.showMessageDialog(null, "Wut");
+                    }
+
                 }
             }
             SPACEpressed = true;
+            if(!shotPlayer2){
+                avatar2.setShotRight();
+            }
+
+        }
+        if(keyEvent.getCode() == KeyCode.M){
+            if(shotPlayer1) {
+                synchronized(Thread.currentThread()){
+                    try{
+                        Thread.sleep(50);
+                    }
+                    catch(Exception e){
+                        JOptionPane.showMessageDialog(null, "Wut");
+                    }
+
+                }
+            }
+            Mpressed = true;
+            if(!shotPlayer2){
+                avatar2.setShotLeft();
+            }
         }
         if(keyEvent.getCode() == KeyCode.UP){
             UPpressed = true;
@@ -213,10 +257,10 @@ public class PrimaryController implements Initializable {
                             drawMap(map1);
                             if(avatar.getLives()>0){
                                 if(Wpressed||WmomentumCounter>0){
-                                    if(!avatar.checkObstacleX(map1)) {
+                                    if(!avatar.checkObstacleX(map1)&&!avatar.checkAvatar(avatar2)) {
 
                                         avatar.moveForward(WmomentumCounter / MOVEMENT_CONSTANT);
-                                        UPmomentumCounter = Wpressed ? MOVEMENT_CONSTANT : WmomentumCounter - 0.1;
+                                        WmomentumCounter = Wpressed ? MOVEMENT_CONSTANT : WmomentumCounter - 0.1;
 
                                     }else {
                                         double variable = 1.5;
@@ -227,11 +271,11 @@ public class PrimaryController implements Initializable {
                                 }
                                 if(Apressed||AmomentumCounter<0){
                                     avatar.changeAngle(AmomentumCounter);
-                                    AmomentumCounter = Apressed?-TURN_CONSTANT:AmomentumCounter+0.1;
+                                    AmomentumCounter = Apressed? -TURN_CONSTANT : AmomentumCounter + 0.1;
                                 }
                                 if(Spressed||SmomentumCounter>0){
 
-                                    if(!avatar.checkObstacleX(map1)) {
+                                    if(!avatar.checkObstacleX(map1)&&!avatar.checkAvatar(avatar2)) {
                                         avatar.moveBackward(SmomentumCounter/MOVEMENT_CONSTANT);
                                         SmomentumCounter = Spressed? MOVEMENT_CONSTANT: SmomentumCounter-0.1;
                                     }else {
@@ -246,17 +290,22 @@ public class PrimaryController implements Initializable {
                                     DmomentumCounter = Dpressed?TURN_CONSTANT:DmomentumCounter-0.1;
                                     
                                 }
-                                if(Fpressed&&!shotPlayer1){
-                                    avatar.setShot();
-                                    drawShot(avatar, avatar2,1);
-                                    shotPlayer1 = true;
+                                if(Fpressed||shotPlayer1){
+                                    if((avatar.getPosShot().x<=canvas.getWidth()&&avatar.getPosShot().y<=canvas.getHeight())&&(avatar.getPosShot().x>=0&&avatar.getPosShot().y>=0)){
+                                        drawShot(avatar, avatar2,1);
+                                    }
                                     Fpressed=false;
-                                    avatar.setShot();
+                                }
+                                if(Gpressed||shotPlayer1){
+                                    if((avatar.getPosShot().x<=canvas.getWidth()&&avatar.getPosShot().y<=canvas.getHeight())&&(avatar.getPosShot().x>=0&&avatar.getPosShot().y>=0)){
+                                        drawShot(avatar, avatar2,1);
+                                    }
+                                    Gpressed=false;
                                 }
                             }
                             if(avatar2.getLives()>0){
                                 if(UPpressed||UPmomentumCounter>0){
-                                    if(!avatar2.checkObstacleX(map1)) {
+                                    if(!avatar2.checkObstacleX(map1)&&!avatar2.checkAvatar(avatar)) {
 
                                         avatar2.moveForward(UPmomentumCounter / MOVEMENT_CONSTANT);
                                         UPmomentumCounter = UPpressed ? MOVEMENT_CONSTANT : UPmomentumCounter - 0.1;
@@ -272,7 +321,7 @@ public class PrimaryController implements Initializable {
                                     LEFTmomentumCounter = LEFTpressed? -TURN_CONSTANT : LEFTmomentumCounter + 0.1;
                                 }
                                 if(DOWNpressed||DOWNmomentumCounter>0){
-                                    if(!avatar2.checkObstacleX(map1)) {
+                                    if(!avatar2.checkObstacleX(map1)&&!avatar2.checkAvatar(avatar)) {
 
                                         avatar2.moveBackward(DOWNmomentumCounter/MOVEMENT_CONSTANT);
                                     DOWNmomentumCounter = DOWNpressed? MOVEMENT_CONSTANT : DOWNmomentumCounter-0.1;
@@ -288,12 +337,17 @@ public class PrimaryController implements Initializable {
                                     avatar2.changeAngle(RIGHTmomentumCounter);
                                     RIGHTmomentumCounter = RIGTHpressed? TURN_CONSTANT : RIGHTmomentumCounter-0.1;
                                 }
-                                if(SPACEpressed&&!shotPlayer2){
-                                    avatar2.setShot();
-                                    drawShot(avatar2, avatar,2);
-                                    shotPlayer2=true;
+                                if(SPACEpressed||shotPlayer2){
+                                    if((avatar2.getPosShot().x<=canvas.getWidth()&&avatar2.getPosShot().y<=canvas.getHeight())&&(avatar2.getPosShot().x>=0&&avatar2.getPosShot().y>=0)){
+                                        drawShot(avatar2, avatar,2);
+                                    }
                                     SPACEpressed=false;
-                                    avatar2.setShot();
+                                }
+                                if(Mpressed||shotPlayer2){
+                                    if((avatar2.getPosShot().x<=canvas.getWidth()&&avatar2.getPosShot().y<=canvas.getHeight())&&(avatar2.getPosShot().x>=0&&avatar2.getPosShot().y>=0)){
+                                        drawShot(avatar2, avatar,2);
+                                    }
+                                    Mpressed=false;
                                 }
                             }
 
@@ -314,57 +368,33 @@ public class PrimaryController implements Initializable {
 
     private void drawShot(Avatar avatarWhoShot, Avatar avatarShoted, int player){
 
-        boolean draw=true;
+        if(player==1)shotPlayer1=true;
+        if(player==2)shotPlayer2=true;
 
-        if(player==1&& shotPlayer1)draw=false;
-        if(player==2&& shotPlayer2)draw=false;
+        boolean shot = true;
+        avatarWhoShot.shot();
+        avatarWhoShot.moveForwardShot();
 
-        Runnable runnable = () -> {
-            boolean shot = true;
-            while(shot&&(avatarWhoShot.getPosShot().x<=canvas.getWidth()&&avatarWhoShot.getPosShot().y<=canvas.getHeight())&&(avatarWhoShot.getPosShot().x>=0&&avatarWhoShot.getPosShot().y>=0)){
-                avatarWhoShot.shot();
-                avatarWhoShot.moveForwardShot();
-
-                if(avatarWhoShot.getPosShot().x<=avatarShoted.getPos().x+25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
-                        avatarWhoShot.getPosShot().x>=avatarShoted.getPos().x-25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
-                        avatarWhoShot.getPosShot().y-25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))<=avatarShoted.getPos().y&&
-                        avatarWhoShot.getPosShot().y+25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))>=avatarShoted.getPos().y){
-                    shot = false;
-                }
-                try {
-                    synchronized (Thread.currentThread()){
-                        Thread.currentThread().wait(20);
-                    }
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-            if(!shot&&avatarShoted.getLives()>0){
-                avatarShoted.impact();
-                long times = System.currentTimeMillis();
-                while(System.currentTimeMillis()<times+50){
-                    gc.drawImage(image,avatarShoted.getPos().x - 25 ,avatarShoted.getPos().y - 25, 50,50);
-                    try {
-                        synchronized (Thread.currentThread()){
-                            Thread.currentThread().wait(10);
-                        }
-                    } catch (InterruptedException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            }
-            if(player==1)shotPlayer1=false;
-            if(player==2)shotPlayer2=false;
-            Thread.currentThread().interrupt();
-        };
-
-        if(draw){
-            Thread thread = new Thread(runnable);
-
-            thread.start();
+        if((avatarWhoShot.getPosShot().x>canvas.getWidth()||avatarWhoShot.getPosShot().y>canvas.getHeight())||(avatarWhoShot.getPosShot().x<0||avatarWhoShot.getPosShot().y<0)){
             if(player==1)shotPlayer1=false;
             if(player==2)shotPlayer2=false;
         }
+
+        if(avatarWhoShot.getPosShot().x<=avatarShoted.getPos().x+25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
+                avatarWhoShot.getPosShot().x>=avatarShoted.getPos().x-25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
+                avatarWhoShot.getPosShot().y-25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))<=avatarShoted.getPos().y&&
+                avatarWhoShot.getPosShot().y+25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))>=avatarShoted.getPos().y){
+            shot = false;
+            if(player==1)shotPlayer1=false;
+            if(player==2)shotPlayer2=false;
+        }
+        if(!shot&&avatarShoted.getLives()>0){
+            avatarShoted.impact();
+            long times = System.currentTimeMillis();
+            gc.drawImage(image,avatarShoted.getPos().x - 25 ,avatarShoted.getPos().y - 25, 50,50);
+        }
+
+
 
     }
 
