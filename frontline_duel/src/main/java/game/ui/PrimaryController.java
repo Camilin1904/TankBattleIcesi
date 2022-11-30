@@ -135,8 +135,8 @@ public class PrimaryController implements Initializable {
         }
         if(keyEvent.getCode() == KeyCode.A){
             Apressed = true;
-            Wpressed = false;
-            AmomentumCounter = MOVEMENT_CONSTANT;
+            Dpressed = false;
+            DmomentumCounter = -TURN_CONSTANT;
         }
         if(keyEvent.getCode() == KeyCode.S){
             Spressed = true;
