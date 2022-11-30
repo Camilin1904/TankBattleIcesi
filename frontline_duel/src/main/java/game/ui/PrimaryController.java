@@ -85,10 +85,10 @@ public class PrimaryController implements Initializable {
         canvas.setOnKeyPressed(this::onKeyPressed);
         canvas.setOnKeyReleased(this::onKeyReleased);
 
-        int[][] temp = new int[20][20];
+        int[][] temp = new int[14][14];
 
-        for(int i=0; i<20; i++){
-            for (int j=0; j<20; j++){
+        for(int i=0; i<14; i++){
+            for (int j=0; j<14; j++){
                 temp[i][j] = 1;
             }
         }

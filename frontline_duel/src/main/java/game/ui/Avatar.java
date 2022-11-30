@@ -9,7 +9,7 @@ import game.model.*;
 public class Avatar {
 
     private Canvas canvas;
-    private GraphicsContext gc;
+    protected GraphicsContext gc;
 
     private Image tank;
 
@@ -17,14 +17,14 @@ public class Avatar {
 
     protected Vector direction;
 
-    private Vector posShot;
+    protected Vector posShot;
 
 
-    private Vector directShot;
+    protected Vector directShot;
 
     private int lives;
 
-    private double SHOT_SPEED = 2;
+    protected double SHOT_SPEED = 2;
 
     protected Moveable objectAssigned;
 
@@ -35,7 +35,7 @@ public class Avatar {
         String uri = "file:"+FrontlineDuel.class.getResource("tank.png").getPath();
         tank = new Image(uri);
         pos = new Vector(posX,posY);
-        posShot = new Vector(posX,posY);
+        posShot = new Vector(posX,posY );
         direction = new Vector(1,1);
         directShot = new Vector(1,1);
         lives = 5;

@@ -113,4 +113,24 @@ public class Enemy implements Moveable{
     public String getTargetCoordinates() {
         return targetCoordinates;
     }
+
+    public boolean clearShot(){
+        boolean clear = true;
+        Vertex<String,Moveable> actCheck = position;
+        int[] last = new int[2];
+        for(Vertex<String,Moveable> i : path){
+            String[] p1 = actCheck.getId().split(",");
+            String[] p2 = i.getId().split(",");
+            int difY = Integer.parseInt(p2[0])-Integer.parseInt(p1[0]);
+            int difX = Integer.parseInt(p2[1])-Integer.parseInt(p1[1]);
+            if(actCheck!=position){
+                clear = last[0]==difY&&last[1]==difX;
+                if(!clear) break;
+            }
+            last[0] = difY;
+            last[1] = difX;
+            actCheck = i;
+        }
+        return clear;
+    }
 }

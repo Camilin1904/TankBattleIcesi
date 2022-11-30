@@ -1,6 +1,7 @@
 package game.ui;
 
 import javafx.scene.canvas.Canvas;
+import javafx.scene.paint.Color;
 
 import java.util.Arrays;
 
@@ -25,7 +26,6 @@ public class EnemyAvatar extends Avatar{
     public void move(){
         Enemy.getInstance().updatePath();
         String[] targ = Enemy.getInstance().getTargetCoordinates().split(",");
-        System.out.println(Arrays.toString(targ));
         double amp = direction.getAmplitude();
         double actAngle = direction.getAngle()>=0?direction.getAngle():direction.getAngle()+360;
         String[] posi = Enemy.getInstance().getPosition().getId().split(",");
@@ -33,7 +33,7 @@ public class EnemyAvatar extends Avatar{
         int difX = Integer.parseInt(targ[1])-Integer.parseInt(posi[1]);
         int addAngle = 0;
 
-
+        System.out.println(Enemy.getInstance().clearShot());
         if(difX==1&&difY==0) angle = 0;
         else if(difX==1&&difY==1) angle = 45;
         else if(difX==0&&difY==1) angle = 90;
@@ -44,28 +44,32 @@ public class EnemyAvatar extends Avatar{
         else if(difX==1&&difY==-1) angle = 315;
 
 
-        System.out.println(angle + "**" + actAngle);
+        /*System.out.println(angle + "**" + actAngle);
         System.out.println("!" + Arrays.toString(targ));
-        System.out.println("¡" + Arrays.toString(posi));
+        System.out.println("¡" + Arrays.toString(posi));*/
 
 
-
-
-        if(angle == (int)actAngle){
-            System.out.println(direction.x + "/" + direction.y);
+        if(angle == (int)actAngle&&!Enemy.getInstance().clearShot()){
+            //System.out.println(direction.x + "/" + direction.y);
             //System.out.println(direction.y + "/" + direction.x);
+
             pos.x += direction.x;
             pos.y += direction.y;
 
             objectAssigned.move(pos.x, pos.y);
         } 
         else{
-            actAngle += 1;
+            if(angle>actAngle)actAngle += (adN = 1);
+            else if (angle<actAngle)actAngle += (adN = -1);
+            else actAngle += adN;
+            
             direction.x = amp*Math.cos(Math.toRadians(actAngle));
             direction.y = amp*Math.sin(Math.toRadians(actAngle));
 
             
         }
+
+        
        // else if(angle>360)angle = 0;
         //else{
 
@@ -73,4 +77,23 @@ public class EnemyAvatar extends Avatar{
         
     }
     
+    public void setShot(){
+        double amp = direction.getAmplitude();
+        double angle = direction.getAngle();
+        posShot.x = pos.x;
+        posShot.y = pos.y;
+        directShot.x = amp*Math.cos(Math.toRadians(angle));
+        directShot.y = amp*Math.sin(Math.toRadians(angle));
+    }
+
+    public void shot(){
+        gc.setFill(Color.BLUE);
+        gc.fillRect(posShot.x, posShot.y, 10,10);
+        gc.restore();
+    }
+
+    public void moveForwardShot(){
+        posShot.x += SHOT_SPEED*directShot.x;
+        posShot.y += SHOT_SPEED*directShot.y;
+    }
 }
