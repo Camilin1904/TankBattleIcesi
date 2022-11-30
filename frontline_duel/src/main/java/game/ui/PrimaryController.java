@@ -2,9 +2,7 @@ package game.ui;
 
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
@@ -13,14 +11,14 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.net.URL;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.swing.JOptionPane;
-import javax.swing.text.AbstractDocument.LeafElement;
 
 public class PrimaryController implements Initializable {
 
@@ -245,11 +243,18 @@ public class PrimaryController implements Initializable {
     }
 
     public void draw(){
+        AtomicBoolean exit = new AtomicBoolean(false);
         new Thread(
                 ()->{
-                    while(isRunning){
+                    while(isRunning && !exit.get()){
                         //Dibujo
                         Platform.runLater(()->{
+                            if(avatar2.getLives()<=0){
+                                exit.set(true);
+                                Stage stage = (Stage) canvas.getScene().getWindow();
+                                stage.close();
+                                FrontlineDuel.showWindow("win.fxml");
+                            }
                             gc.setFill(Color.CYAN);
                             gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
                             avatar.draw();
@@ -390,8 +395,16 @@ public class PrimaryController implements Initializable {
         }
         if(!shot&&avatarShoted.getLives()>0){
             avatarShoted.impact();
-            long times = System.currentTimeMillis();
             gc.drawImage(image,avatarShoted.getPos().x - 25 ,avatarShoted.getPos().y - 25, 50,50);
+            long before = System.currentTimeMillis();
+            gc.drawImage(image,avatarShoted.getPos().x - 25 ,avatarShoted.getPos().y - 25, 50,50);
+        }
+
+        if(avatarWhoShot.shotObstacle(map1)){
+            if(player==1)shotPlayer1=false;
+            if(player==2)shotPlayer2=false;
+            gc.drawImage(image,avatarWhoShot.getPosShot().x ,avatarWhoShot.getPosShot().y, 50,50);
+
         }
 
 

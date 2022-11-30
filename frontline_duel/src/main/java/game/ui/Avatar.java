@@ -81,6 +81,19 @@ public class Avatar {
 
     }
 
+    public boolean shotObstacle(ArrayList<Obstacle> ob){
+
+        for (int i = 0; i<ob.size();i++){
+            System.out.println(ob.get(i).getX() +" --------- " + ob.get(i).getY());
+            if(ob.get(i).shape.intersects(posShot.x,posShot.y,10,10)){
+                return true;
+            }
+
+        }
+        return false;
+
+    }
+
     public boolean checkAvatar(Avatar avatar){
 
         return shape.intersects(avatar.pos.x,avatar.pos.y, Math.cos(Math.toRadians(avatar.pos.getAngle()))*50, Math.sin(Math.toRadians(avatar.pos.getAngle()))*50);
