@@ -71,8 +71,13 @@ public class PrimaryController implements Initializable {
     String uri = "file:"+FrontlineDuel.class.getResource("boom.png").getPath();
     Image image = new Image(uri);
 
+    private String fondo = "file:"+FrontlineDuel.class.getResource("Fondo.jpeg").getPath();
+
+    private Image fon = new Image(fondo);
+
     private ArrayList<Obstacle> map1 = new ArrayList<>();
 
+    private ArrayList<Obstacle> map2 = new ArrayList<>();
 
 
     @Override
@@ -87,7 +92,27 @@ public class PrimaryController implements Initializable {
         avatar = new Avatar(canvas);
         avatar2 = new Avatar(canvas);
         initializedMap1();
-        draw();
+        initializedMap2();
+        selectMap();
+
+
+    }
+
+    public void selectMap(){
+
+        int map = (int) (Math.random() * 2 + 1);
+        switch (map){
+            case 1:
+                draw(map1);
+                break;
+            case 2:
+                draw(map2);
+                break;
+            case 3:
+                //draw(map3);
+                break;
+        }
+
     }
 
     private void onKeyReleased(KeyEvent keyEvent) {
@@ -122,6 +147,7 @@ public class PrimaryController implements Initializable {
             LEFTpressed = false;
         }
     }
+
 
     private void onKeyPressed(KeyEvent keyEvent) {
         System.out.println(keyEvent.getCode());
@@ -200,20 +226,19 @@ public class PrimaryController implements Initializable {
         avatar.setPosition(mouseEvent.getX(), mouseEvent.getY());
     }
 
-    public void draw(){
+    public void draw(ArrayList<Obstacle> map){
         new Thread(
                 ()->{
                     while(isRunning){
                         //Dibujo
                         Platform.runLater(()->{
-                            gc.setFill(Color.CYAN);
-                            gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
+                            drawBackground();
                             avatar.draw();
                             avatar2.draw();
-                            drawMap(map1);
+                            drawMap(map);
                             if(avatar.getLives()>0){
                                 if(Wpressed||WmomentumCounter>0){
-                                    if(!avatar.checkObstacleX(map1)) {
+                                    if(!avatar.checkObstacleX(map)) {
 
                                         avatar.moveForward(WmomentumCounter / MOVEMENT_CONSTANT);
                                         UPmomentumCounter = Wpressed ? MOVEMENT_CONSTANT : WmomentumCounter - 0.1;
@@ -231,7 +256,7 @@ public class PrimaryController implements Initializable {
                                 }
                                 if(Spressed||SmomentumCounter>0){
 
-                                    if(!avatar.checkObstacleX(map1)) {
+                                    if(!avatar.checkObstacleX(map)) {
                                         avatar.moveBackward(SmomentumCounter/MOVEMENT_CONSTANT);
                                         SmomentumCounter = Spressed? MOVEMENT_CONSTANT: SmomentumCounter-0.1;
                                     }else {
@@ -256,7 +281,7 @@ public class PrimaryController implements Initializable {
                             }
                             if(avatar2.getLives()>0){
                                 if(UPpressed||UPmomentumCounter>0){
-                                    if(!avatar2.checkObstacleX(map1)) {
+                                    if(!avatar2.checkObstacleX(map)) {
 
                                         avatar2.moveForward(UPmomentumCounter / MOVEMENT_CONSTANT);
                                         UPmomentumCounter = UPpressed ? MOVEMENT_CONSTANT : UPmomentumCounter - 0.1;
@@ -272,7 +297,7 @@ public class PrimaryController implements Initializable {
                                     LEFTmomentumCounter = LEFTpressed? -TURN_CONSTANT : LEFTmomentumCounter + 0.1;
                                 }
                                 if(DOWNpressed||DOWNmomentumCounter>0){
-                                    if(!avatar2.checkObstacleX(map1)) {
+                                    if(!avatar2.checkObstacleX(map)) {
 
                                         avatar2.moveBackward(DOWNmomentumCounter/MOVEMENT_CONSTANT);
                                     DOWNmomentumCounter = DOWNpressed? MOVEMENT_CONSTANT : DOWNmomentumCounter-0.1;
@@ -369,14 +394,16 @@ public class PrimaryController implements Initializable {
     }
 
     public void initializedMap1(){
-        Obstacle ob = new Obstacle(275,175,50,canvas);
-        Obstacle ob2 = new Obstacle(275,225,50,canvas);
-        Obstacle ob3 = new Obstacle(275,275,50,canvas);
-        Obstacle ob4 = new Obstacle(275,325,50,canvas);
-        Obstacle ob5 = new Obstacle(575,175,50,canvas);
-        Obstacle ob6 = new Obstacle(575,225,50,canvas);
-        Obstacle ob7 = new Obstacle(575,275,50,canvas);
-        Obstacle ob8 = new Obstacle(575,325,50,canvas);
+        Obstacle ob = new Obstacle(175,125,50,canvas);
+        Obstacle ob2 = new Obstacle(175,250,50,canvas);
+        Obstacle ob3 = new Obstacle(175,375,50,canvas);
+        Obstacle ob4 = new Obstacle(175,500,50,canvas);
+        Obstacle ob5 = new Obstacle(475,125,50,canvas);
+        Obstacle ob6 = new Obstacle(475,250,50,canvas);
+        Obstacle ob7 = new Obstacle(475,375,50,canvas);
+        Obstacle ob8 = new Obstacle(475,500,50,canvas);
+        Obstacle ob9 = new Obstacle(475,625,50,canvas);
+        Obstacle ob10 = new Obstacle(175,625,50,canvas);
         map1.add(ob);
         map1.add(ob2);
         map1.add(ob3);
@@ -385,12 +412,81 @@ public class PrimaryController implements Initializable {
         map1.add(ob6);
         map1.add(ob7);
         map1.add(ob8);
-        ob.draw();
+        map1.add(ob9);
+        map1.add(ob10);
+    }
+
+    public void initializedMap2(){
+        //ESI
+        Obstacle ob5 = new Obstacle(0,250,50,canvas);
+        Obstacle ob8 = new Obstacle(50,250,50,canvas);
+        Obstacle ob10 = new Obstacle(100,250,50,canvas);
+
+        Obstacle ob6 = new Obstacle(250,0,50,canvas);
+        Obstacle ob7 = new Obstacle(250,50,50,canvas);
+        Obstacle ob9 = new Obstacle(250,100,50,canvas);
+        //ESD
+        Obstacle ob = new Obstacle(550,250,50,canvas);
+        Obstacle ob2 = new Obstacle(600,250,50,canvas);
+        Obstacle ob3 = new Obstacle(650,250,50,canvas);
+
+        Obstacle ob4 = new Obstacle(400,0,50,canvas);
+        Obstacle ob11 = new Obstacle(400,50,50,canvas);
+        Obstacle ob12 = new Obstacle(400,100,50,canvas);
+
+
+        //EII
+        Obstacle ob13 = new Obstacle(0,400,50,canvas);
+        Obstacle ob14 = new Obstacle(50,400,50,canvas);
+        Obstacle ob15 = new Obstacle(100,400,50,canvas);
+
+        Obstacle ob16 = new Obstacle(250,650,50,canvas);
+        Obstacle ob17 = new Obstacle(250,600,50,canvas);
+        Obstacle ob18 = new Obstacle(250,550,50,canvas);
+        //EID
+        Obstacle ob19 = new Obstacle(550,400,50,canvas);
+        Obstacle ob20 = new Obstacle(600,400,50,canvas);
+        Obstacle ob21 = new Obstacle(650,400,50,canvas);
+
+        Obstacle ob22 = new Obstacle(400,650,50,canvas);
+        Obstacle ob23 = new Obstacle(400,600,50,canvas);
+        Obstacle ob24 = new Obstacle(400,550,50,canvas);
+
+        map2.add(ob);
+        map2.add(ob2);
+        map2.add(ob3);
+        map2.add(ob4);
+        map2.add(ob5);
+        map2.add(ob6);
+        map2.add(ob7);
+        map2.add(ob8);
+        map2.add(ob9);
+        map2.add(ob10);
+        map2.add(ob11);
+        map2.add(ob12);
+        map2.add(ob13);
+        map2.add(ob14);
+        map2.add(ob15);
+        map2.add(ob16);
+        map2.add(ob17);
+        map2.add(ob18);
+        map2.add(ob19);
+        map2.add(ob20);
+        map2.add(ob21);
+        map2.add(ob22);
+        map2.add(ob23);
+        map2.add(ob24);
+
     }
     public void drawMap(ArrayList<Obstacle> array){
         for(int i = 0; i<array.size();i++){
             array.get(i).draw();
         }
+    }
+    public void drawBackground(){
+        gc.save();
+        gc.drawImage(fon, 0, 0, 700, 700);
+        gc.restore();
     }
 
 }

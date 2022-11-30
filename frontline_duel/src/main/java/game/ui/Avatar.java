@@ -11,6 +11,8 @@ import java.util.ArrayList;
 
 public class Avatar {
 
+
+
     private Canvas canvas;
     private GraphicsContext gc;
 
@@ -70,9 +72,8 @@ public class Avatar {
     }
 
     public boolean checkObstacleX(ArrayList<Obstacle> ob){
-
+        System.out.println(shape.getCenterX() +" --------- " + shape.getCenterY());
        for (int i = 0; i<ob.size();i++){
-           System.out.println(ob.get(i).getX() +" --------- " + ob.get(i).getY());
            if (shape.intersects(ob.get(i).getX()+10,ob.get(i).getY()+10,30,30)){
                return true;
            }
