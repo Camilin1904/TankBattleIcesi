@@ -1,7 +1,8 @@
 package game.model;
 
 public interface Moveable {
-    public String move();
-    public String move(String dir);
+    //public boolean move();
+    public boolean move(double posX, double posY);
     public Object getPosition();
+    public Object getMap();
 }

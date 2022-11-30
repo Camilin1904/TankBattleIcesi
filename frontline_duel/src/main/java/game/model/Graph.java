@@ -8,8 +8,6 @@ public interface Graph<I, T>{
 
     public void addConnection(I pointer, I pointed, int weight);
 
-    public void addConnection(I pointer, I pointed, String direction, int weight);
-
     public void addValue(I id, T value);
 
     public void BFS(I s);

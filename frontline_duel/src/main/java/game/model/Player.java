@@ -14,11 +14,12 @@ public class Player implements Moveable{
 
     private Score posScore;
 
+    private ListGraph<String, Moveable> map;
 
 
-    public Player (String name, double score) {
+
+    public Player (String name) {
         this.name=name;
-        this.score=score;
         names = new ArrayList<String>();
         posScore = new Score();
     }
@@ -55,57 +56,27 @@ public class Player implements Moveable{
         this.score = score;
     }
 
-    public String move(String dir){
-        this.dir = dir;
-        return move();
+    public boolean move(double posX, double posY){
+        String[] pos = position.getId().split(",");
+        int i = (int)(posY/50), j = (int)(posX/50);
+
+        System.out.println("#" + i + "/" + j);
+        /*System.out.println(i!=Integer.parseInt(pos[0])||j !=Integer.parseInt(pos[1]));
+        System.out.println(pos[0] + "," + pos[1]);*/
+        if(i!=Integer.parseInt(pos[0])||j !=Integer.parseInt(pos[1])){
+            /*System.out.println(posX + "," + posY);
+            System .out.println(i + "," + j);*/
+            position.setValue(null);
+            position = map.searchVertex(i + "," + j);
+            position.setValue(this);
+            Enemy.getInstance().updatePath();
+            return true;
+        }
+        return false;
     }
 
-    @Override
-    public String move() {
-        Pair<Vertex<String, Moveable>,Integer> newPos = null;
-        String retrn;
-        boolean check = false;
-        switch(dir){
-            case ("R"):
-                if((newPos = position.getRight())!=null){
-                    check = newPos.getA().getValue()!=null;
-                    position.setValue(null);
-                    position = newPos.getA();
-                    position.setValue(this);
-                }
-                break;
-            case("L"):
-                if((newPos = position.getLeft())!=null){
-                    check = newPos.getA().getValue()!=null;
-                    position.setValue(null);
-                    position = newPos.getA();
-                    position.setValue(this);
-                }
-                break;
-            case("U"):
-                if((newPos = position.getUp())!=null){
-                    check = newPos.getA().getValue()!=null;
-                    position.setValue(null);
-                    position = newPos.getA();
-                    position.setValue(this);
-                }
-                break;
-            case("D"):
-                if((newPos = position.getDown())!=null){
-                    check = newPos.getA().getValue()!=null;
-                    position.setValue(null);
-                    position = newPos.getA();
-                    position.setValue(this);
-                }
-                break;
-
-        }
-        if(position.getHasKey())position.setHasKey(false);
-        retrn = newPos!=null?newPos.getB().toString():null;
-        if(check){
-            retrn = "n";
-        }
-        return retrn;
+    public boolean move() {
+        return false;
     }
 
     public Vertex<String, Moveable> getPosition() {
@@ -133,5 +104,12 @@ public class Player implements Moveable{
         dir = null;
         position = null;
         posScore = null;
+    }
+
+    public VertexGraph<String, Moveable> getMap() {
+        return map;
+    }
+    public void setMap(ListGraph<String, Moveable> map) {
+        this.map = map;
     }
 }

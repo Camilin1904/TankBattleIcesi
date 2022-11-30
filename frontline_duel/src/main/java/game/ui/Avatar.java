@@ -4,6 +4,7 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import game.model.*;
 
 public class Avatar {
 
@@ -12,9 +13,9 @@ public class Avatar {
 
     private Image tank;
 
-    private Vector pos;
+    protected Vector pos;
 
-    private Vector direction;
+    protected Vector direction;
 
     private Vector posShot;
 
@@ -25,17 +26,20 @@ public class Avatar {
 
     private double SHOT_SPEED = 2;
 
+    protected Moveable objectAssigned;
 
-    public Avatar(Canvas canvas){
+
+    public Avatar(Canvas canvas, Moveable character, int posX, int posY){
         this.canvas = canvas;
         gc = canvas.getGraphicsContext2D();
         String uri = "file:"+FrontlineDuel.class.getResource("tank.png").getPath();
         tank = new Image(uri);
-        pos = new Vector(100,100);
-        posShot = new Vector(100,100);
-        direction = new Vector(2,2);
-        directShot = new Vector(2,2);
+        pos = new Vector(posX,posY);
+        posShot = new Vector(posX,posY);
+        direction = new Vector(1,1);
+        directShot = new Vector(1,1);
         lives = 5;
+        objectAssigned = character;
     }
 
     public void draw(){
@@ -61,13 +65,14 @@ public class Avatar {
     public void moveForward(double mult){
         pos.x += direction.x*mult;
         pos.y += direction.y*mult;
+        objectAssigned.move(pos.x, pos.y);
 
     }
 
     public void moveBackward(double mult){
         pos.x -= direction.x*mult;
         pos.y -= direction.y*mult;
-
+        objectAssigned.move(pos.x, pos.y);
     }
 
     public void setShot(){

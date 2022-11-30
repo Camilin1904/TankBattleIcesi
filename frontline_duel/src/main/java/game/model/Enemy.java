@@ -1,18 +1,22 @@
 package game.model;
 
+import java.util.Arrays;
+import java.util.EmptyStackException;
 import java.util.Stack;
 
-@SuppressWarnings("unchecked")
 public class Enemy implements Moveable{
-    private Player target;
+    private Player target1;
+    private Player target2;
 
     private Vertex<String, Moveable> position;
 
-    private Graph<String, Moveable> map;
+    private ListGraph<String, Moveable> map;
     
     private Vertex<String, Moveable> goal = null;
 
     private Stack<Vertex<String, Moveable>> path = null;
+
+    private String targetCoordinates;
 
     private static Enemy instance = new Enemy();
 
@@ -20,69 +24,74 @@ public class Enemy implements Moveable{
         path = new Stack<>();
     }
     
-    public String move(){
-        updatePath();
-        
-        position.setValue(null);
-        String returnS = null;
-        Vertex<String, Moveable> newPos = !path.isEmpty()?path.pop(): position;
-        
-        if(newPos!=null&&(newPos.getValue()==null||newPos.getValue()==target)){
-            String r = position.getRight()!=null?position.getRight().toString():"";
-            String l = position.getLeft()!=null?position.getLeft().toString():"";
-            String u = position.getUp()!=null?position.getUp().toString():"";
-            String d = position.getDown()!=null?position.getDown().toString():"";
-            if(newPos.toString().equals(r)){
-                    returnS = "R";
-            }
-            else if(newPos.toString().equals(l)){
-                    returnS = "L";
-            }
-            else if(newPos.toString().equals(u)){
-                returnS = "U";
-            }
-            else if(newPos.toString().equals(d)){
-                    returnS = "D";
-            }
-            for(Pair<Vertex<String, Moveable>,Integer> i : position.getAdyacentVertex()){
-                if(i.getA()==newPos){
-                    if(i.getB()==2) returnS += "2";
-                    break;
-                }
-            }
-            if (newPos.getValue()!=null&&newPos.getValue().equals(target)){
-                returnS = "y";
-            }
-            position = newPos;
+    public boolean move(double posX, double posY){
+        //updatePath();
+        try{
+            String[] desPos = targetCoordinates.split(",");
+            int i = (int)posY/50, j = (int)posX/50;
+            position.setValue(null);
+            position = map.searchVertex(i + "," + j);
+            position.setValue(instance);
+            /*System.out.println("-" + Arrays.toString(desPos));
+            System.out.println(i + "," + j);*/
+            //if(i==Integer.parseInt(desPos[0])&& j ==Integer.parseInt(desPos[1])){
+                targetCoordinates = path.pop().getId();
+                return true;
+            //}
+            /*if(j !=Integer.parseInt(pos[0])&&i !=Integer.parseInt(pos[1])){
+                position.setValue(null);
+                position = map.searchVertex(i + "," + j);
+                position.setValue(this);
+                
+            }*/
         }
-        
-        position.setValue(this);
-        return returnS;
-    }
+        catch (EmptyStackException e){
+            System.out.println("i");
+        }
 
-    public String move(String dir){
-        return move();
+        return false;
     }
 
    public int updatePath(){
-        Vertex<String, Moveable> pPos = (Vertex<String, Moveable>) map.containerOf(target);
-        if(goal!=pPos){
+        Vertex<String, Moveable> pPos1 = (Vertex<String, Moveable>) map.containerOf(target1);
+        Vertex<String, Moveable> pPos2 = (Vertex<String, Moveable>) map.containerOf(target2);
+        System.out.println(pPos2);
+        Stack<Vertex<String,Moveable>> path1 = (Stack<Vertex<String, Moveable>>) map.dijktraPath(position.getId(), pPos1.getId());
+        Stack<Vertex<String,Moveable>> path2 = (Stack<Vertex<String, Moveable>>) map.dijktraPath(position.getId(), pPos2.getId());
+        if(path1.size()<path2.size()&&goal!=pPos1){
             path.clear();
-            goal = pPos;
-            path = (Stack<Vertex<String, Moveable>>) map.dijktraPath(position.getId(), pPos.getId());
+            System.out.println("+" + pPos1);
+            goal = pPos1;
+            path = path1;
+            System.out.println(path);
+            targetCoordinates = path.pop().getId();
+        }
+        else if (path1.size()>=path2.size()&&goal!=pPos2){
+            path.clear();
+            goal = pPos2;
+            path = path2;
+            targetCoordinates = path.pop().getId();
         }
         return path.size();
     }
 
-    public Player getTarget() {
-        return target;
+    public Player getTarget1() {
+        return target1;
     }
 
-    public void setTarget(Player target) {
-        this.target = target;
+    public void setTarget1(Player target1) {
+        this.target1 = target1;
     }
 
-    public void setMap(Graph<String, Moveable> map) {
+    public Player getTarget2() {
+        return target2;
+    }
+
+    public void setTarget2(Player target2) {
+        this.target2 = target2;
+    }
+
+    public void setMap(ListGraph<String, Moveable> map) {
         this.map = map;
     }
     public void setPosition(Vertex<String, Moveable> position) {
@@ -96,5 +105,12 @@ public class Enemy implements Moveable{
     }
     public Vertex<String, Moveable> getPosition() {
         return position;
+    }
+
+    public Graph<String, Moveable> getMap() {
+        return map;
+    }
+    public String getTargetCoordinates() {
+        return targetCoordinates;
     }
 }

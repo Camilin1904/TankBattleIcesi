@@ -13,6 +13,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.stage.Stage;
 
 import java.net.URL;
 import java.security.Key;
@@ -20,8 +21,11 @@ import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 import javax.swing.text.AbstractDocument.LeafElement;
+import game.model.*;
 
 public class PrimaryController implements Initializable {
+
+    private Controller ctrl;
 
     @FXML
     private Canvas canvas;
@@ -31,6 +35,7 @@ public class PrimaryController implements Initializable {
 
     //Elementos gráficos
     private Avatar avatar,avatar2;
+    private EnemyAvatar enemyAvatar;
 
 
     //Estados de las teclas
@@ -80,8 +85,30 @@ public class PrimaryController implements Initializable {
         canvas.setOnKeyPressed(this::onKeyPressed);
         canvas.setOnKeyReleased(this::onKeyReleased);
 
-        avatar = new Avatar(canvas);
-        avatar2 = new Avatar(canvas);
+        int[][] temp = new int[20][20];
+
+        for(int i=0; i<20; i++){
+            for (int j=0; j<20; j++){
+                temp[i][j] = 1;
+            }
+        }
+
+        ctrl = new Controller(new Player("jiji"), new Player("jaja"));
+        ctrl.createScenario(temp, "2,2", "6,2", "5,5");
+
+        ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("2,2"));
+        ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("6,2"));
+        Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("5,5"));
+
+        Enemy.getInstance().setMap(ctrl.getStage());
+        Enemy.getInstance().setTarget1(ctrl.getPlayer1());
+        Enemy.getInstance().setTarget2(ctrl.getPlayer2());
+
+
+        avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100);
+        avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300);
+        enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 250);
+
         draw();
     }
 
@@ -205,6 +232,7 @@ public class PrimaryController implements Initializable {
                             gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
                             avatar.draw();
                             avatar2.draw();
+                            enemyAvatar.draw();
                             if(avatar.getLives()>0){
 
                                 if(Wpressed||WmomentumCounter>0){                                    
@@ -257,6 +285,8 @@ public class PrimaryController implements Initializable {
                                     avatar2.setShot();
                                 }
                             }
+
+                            enemyAvatar.move();
 
 
                         });
