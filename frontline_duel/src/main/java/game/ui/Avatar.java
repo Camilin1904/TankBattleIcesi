@@ -178,8 +178,8 @@ public class Avatar {
         lives--;
         if(lives<=0){
             tank = null;
-            String uri = "file:"+FrontlineDuel.class.getResource("boom.png").getPath();
-            tank = new Image(uri);
+            String death = "file:"+FrontlineDuel.class.getResource("oil.png").getPath();
+            tank = new Image(death);
             System.out.println(tank.getUrl());
         }
     }
