@@ -16,6 +16,7 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.security.Key;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
@@ -26,6 +27,7 @@ public class PrimaryController implements Initializable {
     @FXML
     private Canvas canvas;
     private GraphicsContext gc;
+
     private boolean isRunning = true;
 
 
@@ -69,6 +71,8 @@ public class PrimaryController implements Initializable {
     String uri = "file:"+FrontlineDuel.class.getResource("boom.png").getPath();
     Image image = new Image(uri);
 
+    private ArrayList<Obstacle> map1 = new ArrayList<>();
+
 
 
     @Override
@@ -82,6 +86,7 @@ public class PrimaryController implements Initializable {
 
         avatar = new Avatar(canvas);
         avatar2 = new Avatar(canvas);
+        initializedMap1();
         draw();
     }
 
@@ -201,23 +206,40 @@ public class PrimaryController implements Initializable {
                     while(isRunning){
                         //Dibujo
                         Platform.runLater(()->{
-                            gc.setFill(Color.BLACK);
+                            gc.setFill(Color.CYAN);
                             gc.fillRect(0,0, canvas.getWidth(), canvas.getHeight());
                             avatar.draw();
                             avatar2.draw();
+                            drawMap(map1);
                             if(avatar.getLives()>0){
+                                if(Wpressed||WmomentumCounter>0){
+                                    if(!avatar.checkObstacleX(map1)) {
 
-                                if(Wpressed||WmomentumCounter>0){                                    
-                                    avatar.moveForward(WmomentumCounter/MOVEMENT_CONSTANT);
-                                    WmomentumCounter = Wpressed? MOVEMENT_CONSTANT: WmomentumCounter-0.1;
+                                        avatar.moveForward(WmomentumCounter / MOVEMENT_CONSTANT);
+                                        UPmomentumCounter = Wpressed ? MOVEMENT_CONSTANT : WmomentumCounter - 0.1;
+
+                                    }else {
+                                        double variable = 1.5;
+                                        avatar.moveBackward(variable);
+                                        WmomentumCounter = 0;
+                                    }
+
                                 }
                                 if(Apressed||AmomentumCounter<0){
                                     avatar.changeAngle(AmomentumCounter);
                                     AmomentumCounter = Apressed?-TURN_CONSTANT:AmomentumCounter+0.1;
                                 }
                                 if(Spressed||SmomentumCounter>0){
-                                    avatar.moveBackward(SmomentumCounter/MOVEMENT_CONSTANT);
-                                    SmomentumCounter = Spressed? MOVEMENT_CONSTANT: SmomentumCounter-0.1;
+
+                                    if(!avatar.checkObstacleX(map1)) {
+                                        avatar.moveBackward(SmomentumCounter/MOVEMENT_CONSTANT);
+                                        SmomentumCounter = Spressed? MOVEMENT_CONSTANT: SmomentumCounter-0.1;
+                                    }else {
+                                        double variable = 1.5;
+                                        avatar.moveBackward(variable);
+                                        SmomentumCounter = 0;
+                                    }
+
                                 }
                                 if(Dpressed||DmomentumCounter>0){
                                     avatar.changeAngle(DmomentumCounter);
@@ -234,16 +256,33 @@ public class PrimaryController implements Initializable {
                             }
                             if(avatar2.getLives()>0){
                                 if(UPpressed||UPmomentumCounter>0){
-                                    avatar2.moveForward(UPmomentumCounter/MOVEMENT_CONSTANT);
-                                    UPmomentumCounter = UPpressed? MOVEMENT_CONSTANT : UPmomentumCounter-0.1;
+                                    if(!avatar2.checkObstacleX(map1)) {
+
+                                        avatar2.moveForward(UPmomentumCounter / MOVEMENT_CONSTANT);
+                                        UPmomentumCounter = UPpressed ? MOVEMENT_CONSTANT : UPmomentumCounter - 0.1;
+
+                                    }else {
+                                        double variable = 1.5;
+                                            avatar2.moveBackward(variable);
+                                            UPmomentumCounter = 0;
+                                    }
                                 }
                                 if(LEFTpressed||LEFTmomentumCounter<0){
                                     avatar2.changeAngle(LEFTmomentumCounter);
                                     LEFTmomentumCounter = LEFTpressed? -TURN_CONSTANT : LEFTmomentumCounter + 0.1;
                                 }
                                 if(DOWNpressed||DOWNmomentumCounter>0){
-                                    avatar2.moveBackward(DOWNmomentumCounter/MOVEMENT_CONSTANT);
+                                    if(!avatar2.checkObstacleX(map1)) {
+
+                                        avatar2.moveBackward(DOWNmomentumCounter/MOVEMENT_CONSTANT);
                                     DOWNmomentumCounter = DOWNpressed? MOVEMENT_CONSTANT : DOWNmomentumCounter-0.1;
+
+                                    }else {
+                                        double variable = 1.5;
+                                        avatar2.moveForward(variable);
+                                        DOWNmomentumCounter=0;
+                                    }
+
                                 }
                                 if(RIGTHpressed||RIGHTmomentumCounter>0){
                                     avatar2.changeAngle(RIGHTmomentumCounter);
@@ -327,8 +366,31 @@ public class PrimaryController implements Initializable {
             if(player==2)shotPlayer2=false;
         }
 
+    }
 
-
+    public void initializedMap1(){
+        Obstacle ob = new Obstacle(275,175,50,canvas);
+        Obstacle ob2 = new Obstacle(275,225,50,canvas);
+        Obstacle ob3 = new Obstacle(275,275,50,canvas);
+        Obstacle ob4 = new Obstacle(275,325,50,canvas);
+        Obstacle ob5 = new Obstacle(575,175,50,canvas);
+        Obstacle ob6 = new Obstacle(575,225,50,canvas);
+        Obstacle ob7 = new Obstacle(575,275,50,canvas);
+        Obstacle ob8 = new Obstacle(575,325,50,canvas);
+        map1.add(ob);
+        map1.add(ob2);
+        map1.add(ob3);
+        map1.add(ob4);
+        map1.add(ob5);
+        map1.add(ob6);
+        map1.add(ob7);
+        map1.add(ob8);
+        ob.draw();
+    }
+    public void drawMap(ArrayList<Obstacle> array){
+        for(int i = 0; i<array.size();i++){
+            array.get(i).draw();
+        }
     }
 
 }
