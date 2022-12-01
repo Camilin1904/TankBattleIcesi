@@ -36,46 +36,52 @@ public class PrimaryController implements Initializable {
     private Canvas canvas;
 
     @FXML
-    private Label pl1Name;
+    private Label player1Name;
+
+    @FXML
+    private ImageView avatarImage1;
 
     @FXML
     private Circle pl1Shot;
 
     @FXML
-    private ImageView pl1life1;
+    private ImageView p1life1;
 
     @FXML
-    private ImageView pl1life2;
+    private ImageView p1life2;
 
     @FXML
-    private ImageView pl1life3;
+    private ImageView p1life3;
 
     @FXML
-    private ImageView pl1life4;
+    private ImageView p1life4;
 
     @FXML
-    private ImageView pl1life5;
+    private ImageView p1life5;
 
     @FXML
-    private Label pl2Name;
+    private Label player2Name;
+
+    @FXML
+    private ImageView avatarImage2;
 
     @FXML
     private Circle pl2Shot;
 
     @FXML
-    private ImageView pl2life1;
+    private ImageView p2life1;
 
     @FXML
-    private ImageView pl2life2;
+    private ImageView p2life2;
 
     @FXML
-    private ImageView pl2life3;
+    private ImageView p2life3;
 
     @FXML
-    private ImageView pl2life4;
+    private ImageView p2life4;
 
     @FXML
-    private ImageView pl2life5;
+    private ImageView p2life5;
 
     private GraphicsContext gc;
 
@@ -157,37 +163,125 @@ public class PrimaryController implements Initializable {
         Enemy.getInstance().setTarget1(ctrl.getPlayer1());
         Enemy.getInstance().setTarget2(ctrl.getPlayer2());
 
+
         initializedMap1();
         initializedMap2();
         selectMap();
-        initializedMap1();
-        initializedMap2();
-        selectMap();
+    }
 
 
 
+    public void status(){
         if(!shotPlayer1){
             pl1Shot.setFill(Color.WHITE);
         }else{
             pl1Shot.setFill(Color.BLACK);
         }
 
+        if(!shotPlayer2){
+            pl2Shot.setFill(Color.WHITE);
+        }else{
+            pl2Shot.setFill(Color.BLACK);
+        }
 
+        String heart = "file:"+FrontlineDuel.class.getResource("heart.png").getPath();
+
+        Image heartFill = new Image(heart);
+
+        String emptyHeart = "file:"+FrontlineDuel.class.getResource("emptyHeart.png").getPath();
+
+        Image heartEmpty = new Image(emptyHeart);
 
         switch (avatar.getLives()){
             case 0:
+                p1life1.setImage(heartEmpty);
+                p1life2.setImage(heartEmpty);
+                p1life3.setImage(heartEmpty);
+                p1life4.setImage(heartEmpty);
+                p1life5.setImage(heartEmpty);
                 break;
             case 1:
+                p1life1.setImage(heartFill);
+                p1life2.setImage(heartEmpty);
+                p1life3.setImage(heartEmpty);
+                p1life4.setImage(heartEmpty);
+                p1life5.setImage(heartEmpty);
                 break;
             case 2:
+                p1life1.setImage(heartFill);
+                p1life2.setImage(heartFill);
+                p1life3.setImage(heartEmpty);
+                p1life4.setImage(heartEmpty);
+                p1life5.setImage(heartEmpty);
                 break;
             case 3:
+                p1life1.setImage(heartFill);
+                p1life2.setImage(heartFill);
+                p1life3.setImage(heartFill);
+                p1life4.setImage(heartEmpty);
+                p1life5.setImage(heartEmpty);
                 break;
             case 4:
+                p1life1.setImage(heartFill);
+                p1life2.setImage(heartFill);
+                p1life3.setImage(heartFill);
+                p1life4.setImage(heartFill);
+                p1life5.setImage(heartEmpty);
                 break;
             case 5:
+                p1life1.setImage(heartFill);
+                p1life2.setImage(heartFill);
+                p1life3.setImage(heartFill);
+                p1life4.setImage(heartFill);
+                p1life5.setImage(heartFill);
                 break;
         }
+
+        switch (avatar2.getLives()){
+            case 0:
+                p2life1.setImage(heartEmpty);
+                p2life2.setImage(heartEmpty);
+                p2life3.setImage(heartEmpty);
+                p2life4.setImage(heartEmpty);
+                p2life5.setImage(heartEmpty);
+                break;
+            case 1:
+                p2life1.setImage(heartFill);
+                p2life2.setImage(heartEmpty);
+                p2life3.setImage(heartEmpty);
+                p2life4.setImage(heartEmpty);
+                p2life5.setImage(heartEmpty);
+                break;
+            case 2:
+                p2life1.setImage(heartFill);
+                p2life2.setImage(heartFill);
+                p2life3.setImage(heartEmpty);
+                p2life4.setImage(heartEmpty);
+                p2life5.setImage(heartEmpty);
+                break;
+            case 3:
+                p2life1.setImage(heartFill);
+                p2life2.setImage(heartFill);
+                p2life3.setImage(heartFill);
+                p2life4.setImage(heartEmpty);
+                p2life5.setImage(heartEmpty);
+                break;
+            case 4:
+                p2life1.setImage(heartFill);
+                p2life2.setImage(heartFill);
+                p2life3.setImage(heartFill);
+                p2life4.setImage(heartFill);
+                p2life5.setImage(heartEmpty);
+                break;
+            case 5:
+                p2life1.setImage(heartFill);
+                p2life2.setImage(heartFill);
+                p2life3.setImage(heartFill);
+                p2life4.setImage(heartFill);
+                p2life5.setImage(heartFill);
+                break;
+        }
+
     }
 
     public void selectMap(){
@@ -218,7 +312,8 @@ public class PrimaryController implements Initializable {
                 avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100, Singleton.getInstance().getPlayer1(), pirate);
                 avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300,Singleton.getInstance().getPlayer2(), naval);
                 enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 50,Singleton.getInstance().getPlayer2(), naval);
-                pl1Name.setText(avatar.getPlayer().getName());
+                player1Name.setText(avatar.getPlayer().getName());
+                player2Name.setText(avatar2.getPlayer().getName());
                 break;
             case 2:
 
@@ -244,7 +339,8 @@ public class PrimaryController implements Initializable {
                 avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 350,Singleton.getInstance().getPlayer2(), naval);
                 enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 200, 50,Singleton.getInstance().getPlayer2(), naval);
                 draw(map2);
-                pl1Name.setText(avatar.getPlayer().getName());
+                player1Name.setText(avatar.getPlayer().getName());
+                player2Name.setText(avatar2.getPlayer().getName());
                 break;
             case 3:
                 //draw(map3);
@@ -418,9 +514,9 @@ public class PrimaryController implements Initializable {
                             if(avatar2.getLives()<=0 || avatar.getLives()<=0){
 
                                 if(avatar.getLives()==0){
-                                    scoreboardS.insert(avatar.getPlayer());
+                                    ScoreboardS.getInstance().insert(avatar.getPlayer());
                                 }else {
-                                    scoreboardS.insert(avatar2.getPlayer());
+                                    ScoreboardS.getInstance().insert(avatar2.getPlayer());
                                 }
 
                                 exit.set(true);
@@ -433,6 +529,7 @@ public class PrimaryController implements Initializable {
                             avatar2.draw();
                             drawMap(map);
                             enemyAvatar.draw();
+                            status();
                             if(avatar.getLives()>0){
                                 if(Wpressed||WmomentumCounter>0){
                                     if(!avatar.checkObstacleX(map)&&!avatar.checkAvatar(avatar2)) {
