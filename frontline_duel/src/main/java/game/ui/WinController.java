@@ -61,4 +61,11 @@ public class WinController implements Initializable {
         FrontlineDuel.showWindow("start.fxml");
 
     }
+    @FXML
+    private void clickBoard(){
+        Stage stage = (Stage) play.getScene().getWindow();
+        stage.close();
+        FrontlineDuel.showWindow("leaderBoard.fxml");
+
+    }
 }
