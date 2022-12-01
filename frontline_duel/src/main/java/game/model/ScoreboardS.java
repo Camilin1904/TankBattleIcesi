@@ -13,6 +13,8 @@ public class ScoreboardS {
 
     private ArrayList<PlayerS> scoreBoard;
 
+    private static ScoreboardS instance = new ScoreboardS();
+
     public ScoreboardS(){
         scoreBoard = new ArrayList<>();
     }
@@ -42,5 +44,13 @@ public class ScoreboardS {
 
     public void wonAGame(PlayerS p){
         p.setGamesWon(p.getGamesWon()+1);
+    }
+
+    public static ScoreboardS getInstance() {
+        return instance;
+    }
+
+    public ArrayList<PlayerS> getPlayers(){
+        return scoreBoard;
     }
 }
