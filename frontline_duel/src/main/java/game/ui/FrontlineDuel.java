@@ -38,7 +38,7 @@ public class FrontlineDuel extends Application {
     public static void showWindow(String fxml) {
         FXMLLoader fxmlLoader = new FXMLLoader(FrontlineDuel.class.getResource(fxml));
         try {
-            Scene scene = new Scene(fxmlLoader.load());
+            Scene scene = new Scene(fxmlLoader.  load());
             Stage stage = new Stage();
             stage.setScene(scene);
             stage.show();

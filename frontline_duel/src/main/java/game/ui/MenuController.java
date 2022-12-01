@@ -92,7 +92,7 @@ public class MenuController implements Initializable {
                 "    -fx-padding: 12 30 12 30;\n" +
                 "    -fx-text-fill: white;\n" +
                 "    -fx-font-size: 12px;\n");
-        //ReproducirSonido();
+        ReproducirSonido();
     }
 
     @FXML
