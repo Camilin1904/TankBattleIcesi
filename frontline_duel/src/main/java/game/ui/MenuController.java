@@ -1,5 +1,6 @@
 package game.ui;
 
+import game.model.ScoreboardS;
 import game.model.Singleton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -37,6 +38,8 @@ public class MenuController implements Initializable {
 
     @FXML
     TextField player2 = new TextField();
+
+    private ScoreboardS score = ScoreboardS.getInstance();
 
     public void ReproducirSonido(){
 
@@ -92,7 +95,7 @@ public class MenuController implements Initializable {
                 "    -fx-padding: 12 30 12 30;\n" +
                 "    -fx-text-fill: white;\n" +
                 "    -fx-font-size: 12px;\n");
-        ReproducirSonido();
+        //ReproducirSonido();
     }
 
     @FXML
@@ -111,6 +114,7 @@ public class MenuController implements Initializable {
 
     @FXML
     private void exit(){
+        score.exportar();
         Stage stage = (Stage) play.getScene().getWindow();
         stage.close();
     }

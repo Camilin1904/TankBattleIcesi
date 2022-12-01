@@ -470,13 +470,16 @@ public class PrimaryController implements Initializable {
 
                                 if(avatar.getLives()==0){
                                     ScoreboardS.getInstance().insert(avatar.getPlayer());
+                                    WinController.instance.setPlayer(avatar.getPlayer());
                                 }else {
                                     ScoreboardS.getInstance().insert(avatar2.getPlayer());
+                                    WinController.instance.setPlayer(avatar2.getPlayer());
                                 }
 
                                 exit.set(true);
                                 Stage stage = (Stage) canvas.getScene().getWindow();
                                 stage.close();
+
                                 FrontlineDuel.showWindow("win.fxml");
                             }
                             drawBackground();

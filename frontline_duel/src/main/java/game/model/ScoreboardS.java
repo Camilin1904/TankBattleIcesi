@@ -1,5 +1,7 @@
 package game.model;
 
+import game.Read.ToJsonReader;
+import game.Read.ToJsonWriter;
 import game.ui.PlayerS;
 
 import java.util.ArrayList;
@@ -53,5 +55,21 @@ public class ScoreboardS {
 
     public ArrayList<PlayerS> getPlayers(){
         return scoreBoard;
+    }
+
+    public void importar(){
+        if( ToJsonReader.readP() != null){
+
+            for (int i = 0; i<ToJsonReader.readP().size();i++){
+
+                scoreBoard.add(ToJsonReader.readP().get(i));
+
+            }
+
+        }
+    }
+
+    public void exportar(){
+        ToJsonWriter.Write(ScoreboardS.getInstance().getPlayers());
     }
 }
