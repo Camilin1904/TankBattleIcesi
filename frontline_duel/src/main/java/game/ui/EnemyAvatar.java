@@ -14,8 +14,8 @@ public class EnemyAvatar extends Avatar{
     String actualTargCoord = "";
     boolean firstPass = true;
 
-    public EnemyAvatar(Canvas canvas, Moveable character, int posX, int posY) {
-        super(canvas, character, posX, posY);
+    public EnemyAvatar(Canvas canvas, Moveable character, int posX, int posY, PlayerS player, String uri) {
+        super(canvas, character, posX, posY, player, uri);
         actualTargCoord = Enemy.getInstance().getPosition().getId();
     }
 

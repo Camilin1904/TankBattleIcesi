@@ -134,15 +134,15 @@ public class PrimaryController implements Initializable {
     private ScoreboardS scoreboardS = new ScoreboardS();
 
 
-
-
+    String pirate;
+    String naval;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        String pirate = "file:"+FrontlineDuel.class.getResource("b.png").getPath();
+        pirate = "file:"+FrontlineDuel.class.getResource("b.png").getPath();
 
-        String naval = "file:"+FrontlineDuel.class.getResource("a.png").getPath();
+        naval = "file:"+FrontlineDuel.class.getResource("a.png").getPath();
 
         gc = canvas.getGraphicsContext2D();
         canvas.setFocusTraversable(true);
@@ -160,14 +160,11 @@ public class PrimaryController implements Initializable {
         initializedMap1();
         initializedMap2();
         selectMap();
-
-        avatar = new Avatar(canvas, Singleton.getInstance().getPlayer1(), pirate);
-        avatar2 = new Avatar(canvas,Singleton.getInstance().getPlayer2(), naval);
         initializedMap1();
         initializedMap2();
         selectMap();
 
-        pl1Name.setText(avatar.getPlayer().getName());
+
 
         if(!shotPlayer1){
             pl1Shot.setFill(Color.WHITE);
@@ -218,9 +215,10 @@ public class PrimaryController implements Initializable {
                 ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("2,2"));
                 ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("6,2"));
                 Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("1,4"));
-                avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100);
-                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300);
-                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 50);
+                avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100, Singleton.getInstance().getPlayer1(), pirate);
+                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300,Singleton.getInstance().getPlayer2(), naval);
+                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 50,Singleton.getInstance().getPlayer2(), naval);
+                pl1Name.setText(avatar.getPlayer().getName());
                 break;
             case 2:
 
@@ -240,12 +238,13 @@ public class PrimaryController implements Initializable {
                 ctrl.createScenario(temp, "2,2", "6,2", "1,4");
 
                 ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("2,2"));
-                ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("6,2"));
+                ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("7,2"));
                 Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("1,4"));
-                avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100);
-                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300);
-                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 200, 50);
+                avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100, Singleton.getInstance().getPlayer1(), pirate);
+                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 350,Singleton.getInstance().getPlayer2(), naval);
+                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 200, 50,Singleton.getInstance().getPlayer2(), naval);
                 draw(map2);
+                pl1Name.setText(avatar.getPlayer().getName());
                 break;
             case 3:
                 //draw(map3);
