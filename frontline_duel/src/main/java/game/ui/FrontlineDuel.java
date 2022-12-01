@@ -17,7 +17,7 @@ public class FrontlineDuel extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("canvasView"), 700, 700);
+        scene = new Scene(loadFXML("start"), 700, 700);
         stage.setScene(scene);
         stage.show();
     }
@@ -33,6 +33,18 @@ public class FrontlineDuel extends Application {
 
     public static void main(String[] args) {
         launch();
+    }
+
+    public static void showWindow(String fxml) {
+        FXMLLoader fxmlLoader = new FXMLLoader(FrontlineDuel.class.getResource(fxml));
+        try {
+            Scene scene = new Scene(fxmlLoader.load());
+            Stage stage = new Stage();
+            stage.setScene(scene);
+            stage.show();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

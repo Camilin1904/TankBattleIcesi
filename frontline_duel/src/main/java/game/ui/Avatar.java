@@ -5,7 +5,6 @@ import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 import game.model.*;
@@ -36,18 +35,18 @@ public class Avatar {
 
     private Circle shape;
 
+    private PlayerS player;
 
-    public Avatar(Canvas canvas, Moveable character, int posX, int posY){
+    public Avatar(Canvas canvas, Moveable character, int posX, int posY, PlayerS player, String uri){
         this.canvas = canvas;
         gc = canvas.getGraphicsContext2D();
-        String uri = "file:"+FrontlineDuel.class.getResource("tank.png").getPath();
         tank = new Image(uri);
         pos = new Vector(posX,posY);
         posShot = new Vector(posX,posY );
         direction = new Vector(1,1);
         directShot = new Vector(1,1);
         lives = 5;
-
+        this.player = player;
         shape = new Circle(-25,-25, 25);
         objectAssigned = character;
     }
@@ -57,8 +56,6 @@ public class Avatar {
         gc.translate(pos.x, pos.y);
         gc.rotate(90+direction.getAngle());
         gc.drawImage(tank, -25,-25, 50,50);
-        gc.setFill(Color.RED);
-        gc.fillOval(-16,-9,29,29);
         gc.restore();
         gc.setFill(Color.BLACK);
     }
@@ -83,6 +80,19 @@ public class Avatar {
            }
        }
        return false;
+
+    }
+
+    public boolean shotObstacle(ArrayList<Obstacle> ob){
+
+        for (int i = 0; i<ob.size();i++){
+            System.out.println(ob.get(i).getX() +" --------- " + ob.get(i).getY());
+            if(ob.get(i).shape.intersects(posShot.x,posShot.y,10,10)){
+                return true;
+            }
+
+        }
+        return false;
 
     }
 
@@ -172,11 +182,18 @@ public class Avatar {
         lives--;
         if(lives<=0){
             tank = null;
-            String uri = "file:"+FrontlineDuel.class.getResource("boom.png").getPath();
-            tank = new Image(uri);
+            String death = "file:"+FrontlineDuel.class.getResource("oil.png").getPath();
+            tank = new Image(death);
             System.out.println(tank.getUrl());
             objectAssigned.murder();
         }
     }
 
+    public PlayerS getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(PlayerS player) {
+        this.player = player;
+    }
 }

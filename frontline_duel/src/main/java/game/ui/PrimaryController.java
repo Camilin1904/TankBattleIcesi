@@ -1,28 +1,32 @@
 package game.ui;
 
+import game.model.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
-import javafx.scene.control.Label;
 
-import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
-import java.security.Key;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.sound.sampled.*;
 import javax.swing.JOptionPane;
 import javax.swing.text.AbstractDocument.LeafElement;
-import game.model.*;
 
 public class PrimaryController implements Initializable {
 
@@ -30,6 +34,49 @@ public class PrimaryController implements Initializable {
 
     @FXML
     private Canvas canvas;
+
+    @FXML
+    private Label pl1Name;
+
+    @FXML
+    private Circle pl1Shot;
+
+    @FXML
+    private ImageView pl1life1;
+
+    @FXML
+    private ImageView pl1life2;
+
+    @FXML
+    private ImageView pl1life3;
+
+    @FXML
+    private ImageView pl1life4;
+
+    @FXML
+    private ImageView pl1life5;
+
+    @FXML
+    private Label pl2Name;
+
+    @FXML
+    private Circle pl2Shot;
+
+    @FXML
+    private ImageView pl2life1;
+
+    @FXML
+    private ImageView pl2life2;
+
+    @FXML
+    private ImageView pl2life3;
+
+    @FXML
+    private ImageView pl2life4;
+
+    @FXML
+    private ImageView pl2life5;
+
     private GraphicsContext gc;
 
     private boolean isRunning = true;
@@ -84,9 +131,19 @@ public class PrimaryController implements Initializable {
 
     private ArrayList<Obstacle> map2 = new ArrayList<>();
 
+    private ScoreboardS scoreboardS = new ScoreboardS();
+
+
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        String pirate = "file:"+FrontlineDuel.class.getResource("b.png").getPath();
+
+        String naval = "file:"+FrontlineDuel.class.getResource("a.png").getPath();
+
         gc = canvas.getGraphicsContext2D();
         canvas.setFocusTraversable(true);
 
@@ -104,7 +161,36 @@ public class PrimaryController implements Initializable {
         initializedMap2();
         selectMap();
 
+        avatar = new Avatar(canvas, Singleton.getInstance().getPlayer1(), pirate);
+        avatar2 = new Avatar(canvas,Singleton.getInstance().getPlayer2(), naval);
+        initializedMap1();
+        initializedMap2();
+        selectMap();
 
+        pl1Name.setText(avatar.getPlayer().getName());
+
+        if(!shotPlayer1){
+            pl1Shot.setFill(Color.WHITE);
+        }else{
+            pl1Shot.setFill(Color.BLACK);
+        }
+
+
+
+        switch (avatar.getLives()){
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+        }
     }
 
     public void selectMap(){
@@ -324,11 +410,25 @@ public class PrimaryController implements Initializable {
     }
 
     public void draw(ArrayList<Obstacle> map){
+        AtomicBoolean exit = new AtomicBoolean(false);
         new Thread(
                 ()->{
-                    while(isRunning){
+                    while(isRunning && !exit.get()){
                         //Dibujo
                         Platform.runLater(()->{
+                            if(avatar2.getLives()<=0 || avatar.getLives()<=0){
+
+                                if(avatar.getLives()==0){
+                                    scoreboardS.insert(avatar.getPlayer());
+                                }else {
+                                    scoreboardS.insert(avatar2.getPlayer());
+                                }
+
+                                exit.set(true);
+                                Stage stage = (Stage) canvas.getScene().getWindow();
+                                stage.close();
+                                FrontlineDuel.showWindow("win.fxml");
+                            }
                             drawBackground();
                             avatar.draw();
                             avatar2.draw();
@@ -336,7 +436,7 @@ public class PrimaryController implements Initializable {
                             enemyAvatar.draw();
                             if(avatar.getLives()>0){
                                 if(Wpressed||WmomentumCounter>0){
-                                    if(!avatar.checkObstacleX(map1)&&!avatar.checkAvatar(avatar2)) {
+                                    if(!avatar.checkObstacleX(map)&&!avatar.checkAvatar(avatar2)) {
 
                                         avatar.moveForward(WmomentumCounter / MOVEMENT_CONSTANT);
                                         WmomentumCounter = Wpressed ? MOVEMENT_CONSTANT : WmomentumCounter - 0.1;
@@ -354,7 +454,7 @@ public class PrimaryController implements Initializable {
                                 }
                                 if(Spressed||SmomentumCounter>0){
 
-                                    if(!avatar.checkObstacleX(map1)&&!avatar.checkAvatar(avatar2)) {
+                                    if(!avatar.checkObstacleX(map)&&!avatar.checkAvatar(avatar2)) {
                                         avatar.moveBackward(SmomentumCounter/MOVEMENT_CONSTANT);
                                         SmomentumCounter = Spressed? MOVEMENT_CONSTANT: SmomentumCounter-0.1;
                                     }else {
@@ -371,20 +471,20 @@ public class PrimaryController implements Initializable {
                                 }
                                 if(Fpressed||shotPlayer1){
                                     if((avatar.getPosShot().x<=canvas.getWidth()&&avatar.getPosShot().y<=canvas.getHeight())&&(avatar.getPosShot().x>=0&&avatar.getPosShot().y>=0)){
-                                        drawShot(avatar, avatar2,enemyAvatar,1);
+                                        drawShot(avatar, avatar2,enemyAvatar,1,map);
                                     }
                                     Fpressed=false;
                                 }
                                 if(Gpressed||shotPlayer1){
                                     if((avatar.getPosShot().x<=canvas.getWidth()&&avatar.getPosShot().y<=canvas.getHeight())&&(avatar.getPosShot().x>=0&&avatar.getPosShot().y>=0)){
-                                        drawShot(avatar, avatar2,enemyAvatar,1);
+                                        drawShot(avatar, avatar2,enemyAvatar,1,map);
                                     }
                                     Gpressed=false;
                                 }
                             }
                             if(avatar2.getLives()>0){
                                 if(UPpressed||UPmomentumCounter>0){
-                                    if(!avatar2.checkObstacleX(map1)&&!avatar2.checkAvatar(avatar)) {
+                                    if(!avatar2.checkObstacleX(map)&&!avatar2.checkAvatar(avatar)) {
 
                                         avatar2.moveForward(UPmomentumCounter / MOVEMENT_CONSTANT);
                                         UPmomentumCounter = UPpressed ? MOVEMENT_CONSTANT : UPmomentumCounter - 0.1;
@@ -400,7 +500,7 @@ public class PrimaryController implements Initializable {
                                     LEFTmomentumCounter = LEFTpressed? -TURN_CONSTANT : LEFTmomentumCounter + 0.1;
                                 }
                                 if(DOWNpressed||DOWNmomentumCounter>0){
-                                    if(!avatar2.checkObstacleX(map1)&&!avatar2.checkAvatar(avatar)) {
+                                    if(!avatar2.checkObstacleX(map)&&!avatar2.checkAvatar(avatar)) {
 
                                         avatar2.moveBackward(DOWNmomentumCounter/MOVEMENT_CONSTANT);
                                     DOWNmomentumCounter = DOWNpressed? MOVEMENT_CONSTANT : DOWNmomentumCounter-0.1;
@@ -418,20 +518,20 @@ public class PrimaryController implements Initializable {
                                 }
                                 if(SPACEpressed||shotPlayer2){
                                     if((avatar2.getPosShot().x<=canvas.getWidth()&&avatar2.getPosShot().y<=canvas.getHeight())&&(avatar2.getPosShot().x>=0&&avatar2.getPosShot().y>=0)){
-                                        drawShot(avatar2, avatar,enemyAvatar,2);
+                                        drawShot(avatar2, avatar,enemyAvatar,2,map);
                                     }
                                     SPACEpressed=false;
                                 }
                                 if(Mpressed||shotPlayer2){
                                     if((avatar2.getPosShot().x<=canvas.getWidth()&&avatar2.getPosShot().y<=canvas.getHeight())&&(avatar2.getPosShot().x>=0&&avatar2.getPosShot().y>=0)){
-                                        drawShot(avatar2, avatar,enemyAvatar,2);
+                                        drawShot(avatar2, avatar,enemyAvatar,2,map);
                                     }
                                     Mpressed=false;
                                 }
                             }
 
                             if(enemyAvatar.move()&&Enemy.getInstance().clearShot()||shotEnemy){
-                                drawShot(enemyAvatar, avatar, avatar2, 3);
+                                drawShot(enemyAvatar, avatar, avatar2, 3, map);
                             }
 
 
@@ -449,7 +549,7 @@ public class PrimaryController implements Initializable {
 
     }
 
-    private void drawShot(Avatar avatarWhoShot, Avatar avatarShoted1, Avatar avatarShoted2, int player){
+    private void drawShot(Avatar avatarWhoShot, Avatar avatarShoted1, Avatar avatarShoted2, int player, ArrayList<Obstacle> map){
 
         switch(player){
             case(1):
@@ -521,8 +621,16 @@ public class PrimaryController implements Initializable {
         }
         if(!shot&&avatarShoted!=null&&avatarShoted.getLives()>0){
             avatarShoted.impact();
-            long times = System.currentTimeMillis();
             gc.drawImage(image,avatarShoted.getPos().x - 25 ,avatarShoted.getPos().y - 25, 50,50);
+            long before = System.currentTimeMillis();
+            gc.drawImage(image,avatarShoted.getPos().x - 25 ,avatarShoted.getPos().y - 25, 50,50);
+        }
+
+        if(avatarWhoShot.shotObstacle(map)){
+            if(player==1)shotPlayer1=false;
+            if(player==2)shotPlayer2=false;
+            gc.drawImage(image,avatarWhoShot.getPosShot().x ,avatarWhoShot.getPosShot().y, 50,50);
+
         }
 
 
@@ -624,5 +732,4 @@ public class PrimaryController implements Initializable {
         gc.drawImage(fon, 0, 0, 700, 700);
         gc.restore();
     }
-
 }
