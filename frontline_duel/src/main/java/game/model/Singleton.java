@@ -7,12 +7,14 @@ public class Singleton {
     private static Singleton instance;
     private PlayerS player1;
     private PlayerS player2;
+    private PlayerS enemy;
 
 
 
     public Singleton() {
         player1 = new PlayerS("");
         player2 = new PlayerS("");
+        enemy = new PlayerS("cpu");
     }
 
     public void createPlayers(String name1, String name2){
@@ -34,6 +36,10 @@ public class Singleton {
 
     public void setPlayer2(PlayerS player2) {
         this.player2 = player2;
+    }
+
+    public PlayerS getEnemy() {
+        return enemy;
     }
 
     public static Singleton getInstance(){

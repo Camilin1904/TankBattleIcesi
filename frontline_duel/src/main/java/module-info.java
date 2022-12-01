@@ -8,4 +8,5 @@ module game.ui {
     opens game.ui to javafx.fxml, com.google.gson;
     //opens game.ui to com.google.gson;
     exports game.ui;
+    exports game.model;
 }
