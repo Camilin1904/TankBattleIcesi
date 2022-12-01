@@ -164,8 +164,8 @@ public class PrimaryController implements Initializable {
         Enemy.getInstance().setTarget2(ctrl.getPlayer2());
 
 
-        initializedMap1();
-        initializedMap2();
+        //initializedMap1();
+        //initializedMap2();
         selectMap();
     }
 
@@ -311,9 +311,10 @@ public class PrimaryController implements Initializable {
                 Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("1,4"));
                 avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100, Singleton.getInstance().getPlayer1(), pirate);
                 avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300,Singleton.getInstance().getPlayer2(), naval);
-                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 50,Singleton.getInstance().getPlayer2(), naval);
+                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 50,Singleton.getInstance().getEnemy(), naval);
                 player1Name.setText(avatar.getPlayer().getName());
                 player2Name.setText(avatar2.getPlayer().getName());
+                initializedMap1();
                 break;
             case 2:
 
@@ -337,10 +338,11 @@ public class PrimaryController implements Initializable {
                 Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("1,4"));
                 avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100, Singleton.getInstance().getPlayer1(), pirate);
                 avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 350,Singleton.getInstance().getPlayer2(), naval);
-                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 200, 50,Singleton.getInstance().getPlayer2(), naval);
+                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 200, 50,Singleton.getInstance().getEnemy(), naval);
                 draw(map2);
                 player1Name.setText(avatar.getPlayer().getName());
                 player2Name.setText(avatar2.getPlayer().getName());
+                initializedMap2();
                 break;
             case 3:
                 //draw(map3);
@@ -511,11 +513,11 @@ public class PrimaryController implements Initializable {
                     while(isRunning && !exit.get()){
                         //Dibujo
                         Platform.runLater(()->{
-                            if(avatar2.getLives()<=0 || avatar.getLives()<=0){
+                            if(avatar2.getLives()<=0&&enemyAvatar.getLives()<=0 || avatar.getLives()<=0&&enemyAvatar.getLives()<=0||avatar.getLives()<=0&&avatar2.getLives()<=0){
 
-                                if(avatar.getLives()==0){
+                                if(avatar2.getLives()<=0){
                                     ScoreboardS.getInstance().insert(avatar.getPlayer());
-                                }else {
+                                }else if (avatar.getLives()<=0){
                                     ScoreboardS.getInstance().insert(avatar2.getPlayer());
                                 }
 
