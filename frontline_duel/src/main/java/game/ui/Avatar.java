@@ -1,5 +1,6 @@
 package game.ui;
 
+import game.model.PlayerS;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -31,8 +32,10 @@ public class Avatar {
 
     private Circle shape;
 
+    private PlayerS player;
 
-    public Avatar(Canvas canvas){
+
+    public Avatar(Canvas canvas, PlayerS player){
         this.canvas = canvas;
         gc = canvas.getGraphicsContext2D();
         String uri = "file:"+FrontlineDuel.class.getResource("tank.png").getPath();
@@ -42,7 +45,7 @@ public class Avatar {
         direction = new Vector(2,2);
         directShot = new Vector(2,2);
         lives = 5;
-
+        this.player = player;
         shape = new Circle(-25,-25, 25);
     }
 
@@ -184,4 +187,11 @@ public class Avatar {
         }
     }
 
+    public PlayerS getPlayer() {
+        return player;
+    }
+
+    public void setPlayer(PlayerS player) {
+        this.player = player;
+    }
 }

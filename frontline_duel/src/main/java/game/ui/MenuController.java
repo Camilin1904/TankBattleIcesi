@@ -1,5 +1,6 @@
 package game.ui;
 
+import game.model.Singleton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -77,6 +78,7 @@ public class MenuController implements Initializable {
     @FXML
     private void clickPlay(){
         if(player1.getText()!=null&&!player1.getText().equals("")&&player2.getText()!=null&&!player2.getText().equals("")){
+            Singleton.getInstance().createPlayers(player1.getText(),player2.getText());
             Stage stage = (Stage) play.getScene().getWindow();
             stage.close();
             FrontlineDuel.showWindow("canvasView.fxml");
