@@ -2,19 +2,24 @@ package game.ui;
 
 import game.model.PlayerS;
 import game.model.ScoreboardS;
+import javafx.beans.InvalidationListener;
+import javafx.collections.ListChangeListener;
+import javafx.collections.ObservableArray;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.image.Image;
+import javafx.stage.Stage;
 
 
-import javax.swing.table.TableColumn;
+
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.ResourceBundle;
+import java.util.*;
 
 public class ScoreboardController implements Initializable {
 
@@ -23,23 +28,207 @@ public class ScoreboardController implements Initializable {
     private Canvas canvas;
 
     private GraphicsContext gc;
-    String uri = "file:"+FrontlineDuel.class.getResource("leaderFondo.jpeg").getPath();
+    String uri = "file:"+FrontlineDuel.class.getResource("leaderFondo.jpg").getPath();
     private Image image = new Image(uri);
 
     @FXML
-    private TableColumn position;
+    private TableColumn<Integer, Integer> position;
+
     @FXML
-    private TableColumn name;
+    private TableView<PlayerS> tableView;
     @FXML
-    private TableColumn score;
+    private TableColumn<PlayerS, String>  name;
+    @FXML
+    private TableColumn<PlayerS, Integer> score;
 
     private ScoreboardS scoreboard;
+
+    @FXML
+    Button exit = new Button();
+
+    @FXML
+    Button play = new Button();
+
+    private ObservableList<PlayerS> list = new ObservableList<PlayerS>() {
+        @Override
+        public void addListener(ListChangeListener<? super PlayerS> listChangeListener) {
+
+        }
+
+        @Override
+        public void removeListener(ListChangeListener<? super PlayerS> listChangeListener) {
+
+        }
+
+        @Override
+        public boolean addAll(PlayerS... playerS) {
+            return false;
+        }
+
+        @Override
+        public boolean setAll(PlayerS... playerS) {
+            return false;
+        }
+
+        @Override
+        public boolean setAll(Collection<? extends PlayerS> collection) {
+            return false;
+        }
+
+        @Override
+        public boolean removeAll(PlayerS... playerS) {
+            return false;
+        }
+
+        @Override
+        public boolean retainAll(PlayerS... playerS) {
+            return false;
+        }
+
+        @Override
+        public void remove(int i, int i1) {
+
+        }
+
+        @Override
+        public int size() {
+            return 0;
+        }
+
+        @Override
+        public boolean isEmpty() {
+            return false;
+        }
+
+        @Override
+        public boolean contains(Object o) {
+            return false;
+        }
+
+        @Override
+        public Iterator<PlayerS> iterator() {
+            return null;
+        }
+
+        @Override
+        public Object[] toArray() {
+            return new Object[0];
+        }
+
+        @Override
+        public <T> T[] toArray(T[] a) {
+            return null;
+        }
+
+        @Override
+        public boolean add(PlayerS playerS) {
+            return false;
+        }
+
+        @Override
+        public boolean remove(Object o) {
+            return false;
+        }
+
+        @Override
+        public boolean containsAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean addAll(Collection<? extends PlayerS> c) {
+            return false;
+        }
+
+        @Override
+        public boolean addAll(int index, Collection<? extends PlayerS> c) {
+            return false;
+        }
+
+        @Override
+        public boolean removeAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public boolean retainAll(Collection<?> c) {
+            return false;
+        }
+
+        @Override
+        public void clear() {
+
+        }
+
+        @Override
+        public PlayerS get(int index) {
+            return null;
+        }
+
+        @Override
+        public PlayerS set(int index, PlayerS element) {
+            return null;
+        }
+
+        @Override
+        public void add(int index, PlayerS element) {
+
+        }
+
+        @Override
+        public PlayerS remove(int index) {
+            return null;
+        }
+
+        @Override
+        public int indexOf(Object o) {
+            return 0;
+        }
+
+        @Override
+        public int lastIndexOf(Object o) {
+            return 0;
+        }
+
+        @Override
+        public ListIterator<PlayerS> listIterator() {
+            return null;
+        }
+
+        @Override
+        public ListIterator<PlayerS> listIterator(int index) {
+            return null;
+        }
+
+        @Override
+        public List<PlayerS> subList(int fromIndex, int toIndex) {
+            return null;
+        }
+
+        @Override
+        public void addListener(InvalidationListener invalidationListener) {
+
+        }
+
+        @Override
+        public void removeListener(InvalidationListener invalidationListener) {
+
+        }
+    };
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         gc = canvas.getGraphicsContext2D();
         canvas.setFocusTraversable(true);
         drawBackground();
+        actualize();
+        PlayerS player = new PlayerS("Samuel");
+        player.setGamesWon(1);
+        list.add(player);
+        tableView.setItems(list);
+
+
+
     }
 
     public void drawBackground(){
@@ -48,7 +237,12 @@ public class ScoreboardController implements Initializable {
         gc.restore();
     }
 
-    public void updateSb(){
+    public void actualize(){
+        scoreboard = ScoreboardS.getInstance();
+       list.addAll(scoreboard.getPlayers()) ;
+    }
+
+   /* public void updateSb(){
         ArrayList<PlayerS> players = ScoreboardS.getInstance().getPlayers();
         if(players!=null) {
             if (players.size() >= 1 && players.get(0) != null) {
@@ -93,7 +287,20 @@ public class ScoreboardController implements Initializable {
             }
         }
 
+    }*/
+
+    @FXML
+    public void clickPlay(){
+        Stage stage = (Stage) play.getScene().getWindow();
+        stage.close();
+        FrontlineDuel.showWindow("start.fxml");
     }
+    @FXML
+    public void clickExit(){
+        Stage stage = (Stage) exit.getScene().getWindow();
+        stage.close();
+    }
+
 
 
 }
