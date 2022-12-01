@@ -32,10 +32,9 @@ public class Avatar {
     private Circle shape;
 
 
-    public Avatar(Canvas canvas){
+    public Avatar(Canvas canvas, String uri){
         this.canvas = canvas;
         gc = canvas.getGraphicsContext2D();
-        String uri = "file:"+FrontlineDuel.class.getResource("tank.png").getPath();
         tank = new Image(uri);
         pos = new Vector(100,100);
         posShot = new Vector(100,100);
@@ -51,8 +50,6 @@ public class Avatar {
         gc.translate(pos.x, pos.y);
         gc.rotate(90+direction.getAngle());
         gc.drawImage(tank, -25,-25, 50,50);
-        gc.setFill(Color.RED);
-        gc.fillOval(-16,-9,29,29);
         gc.restore();
         gc.setFill(Color.BLACK);
     }

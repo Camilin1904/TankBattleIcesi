@@ -10,7 +10,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+import javax.sound.sampled.*;
 import javax.swing.*;
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -33,6 +36,23 @@ public class MenuController implements Initializable {
 
     @FXML
     TextField player2 = new TextField();
+
+    public void ReproducirSonido(){
+
+        try {
+            File file = new File(".\\frontline_duel\\src\\main\\resources\\game\\ui\\opening.wav");
+            System.out.println(file.exists());
+            System.out.println(file.getAbsolutePath());
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch(UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
+            System.out.println("Error al reproducir el sonido.");
+        }
+    }
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -71,7 +91,7 @@ public class MenuController implements Initializable {
                 "    -fx-padding: 12 30 12 30;\n" +
                 "    -fx-text-fill: white;\n" +
                 "    -fx-font-size: 12px;\n");
-
+        //ReproducirSonido();
     }
 
     @FXML

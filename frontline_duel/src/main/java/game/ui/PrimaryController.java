@@ -13,11 +13,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.sound.sampled.*;
 import javax.swing.JOptionPane;
 
 public class PrimaryController implements Initializable {
@@ -75,6 +78,11 @@ public class PrimaryController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
+        String pirate = "file:"+FrontlineDuel.class.getResource("b.png").getPath();
+
+        String naval = "file:"+FrontlineDuel.class.getResource("a.png").getPath();
+
         gc = canvas.getGraphicsContext2D();
         canvas.setFocusTraversable(true);
 
@@ -82,8 +90,8 @@ public class PrimaryController implements Initializable {
         canvas.setOnKeyPressed(this::onKeyPressed);
         canvas.setOnKeyReleased(this::onKeyReleased);
 
-        avatar = new Avatar(canvas);
-        avatar2 = new Avatar(canvas);
+        avatar = new Avatar(canvas, pirate);
+        avatar2 = new Avatar(canvas, naval);
         initializedMap1();
         draw();
     }
