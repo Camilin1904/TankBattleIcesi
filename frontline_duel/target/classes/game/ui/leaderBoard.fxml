@@ -15,7 +15,7 @@
         <columns>
           <TableColumn fx:id="position" prefWidth="140.80005645751953" text="Position" />
           <TableColumn fx:id="name" prefWidth="256.7999267578125" text="Player" />
-            <TableColumn fx:id="score" prefWidth="143.19998168945312" text="Score:" />
+            <TableColumn fx:id="score" prefWidth="143.19998168945312" text="Score" />
         </columns>
       </TableView>
       <Label alignment="CENTER" layoutX="72.0" layoutY="67.0" prefHeight="138.0" prefWidth="560.0" text="Leaderboard" textAlignment="CENTER">

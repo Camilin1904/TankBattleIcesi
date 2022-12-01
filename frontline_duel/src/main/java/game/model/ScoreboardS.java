@@ -1,13 +1,10 @@
 package game.model;
 
-import game.model.PlayerS;
-import javafx.fxml.Initializable;
+import game.ui.PlayerS;
 
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.ResourceBundle;
 
 public class ScoreboardS {
 

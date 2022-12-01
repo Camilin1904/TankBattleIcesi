@@ -9,11 +9,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -30,6 +33,48 @@ public class PrimaryController implements Initializable {
 
     @FXML
     private Canvas canvas;
+
+    @FXML
+    private Label pl1Name;
+
+    @FXML
+    private Circle pl1Shot;
+
+    @FXML
+    private ImageView pl1life1;
+
+    @FXML
+    private ImageView pl1life2;
+
+    @FXML
+    private ImageView pl1life3;
+
+    @FXML
+    private ImageView pl1life4;
+
+    @FXML
+    private ImageView pl1life5;
+
+    @FXML
+    private Label pl2Name;
+
+    @FXML
+    private Circle pl2Shot;
+
+    @FXML
+    private ImageView pl2life1;
+
+    @FXML
+    private ImageView pl2life2;
+
+    @FXML
+    private ImageView pl2life3;
+
+    @FXML
+    private ImageView pl2life4;
+
+    @FXML
+    private ImageView pl2life5;
 
     private GraphicsContext gc;
 
@@ -104,16 +149,36 @@ public class PrimaryController implements Initializable {
         canvas.setOnKeyPressed(this::onKeyPressed);
         canvas.setOnKeyReleased(this::onKeyReleased);
 
-<<<<<<< HEAD
-        avatar = new Avatar(canvas, pirate);
-        avatar2 = new Avatar(canvas, naval);
-=======
-        avatar = new Avatar(canvas, Singleton.getInstance().getPlayer1());
-        avatar2 = new Avatar(canvas,Singleton.getInstance().getPlayer2());
->>>>>>> dec8f491d31efdc81e9353f6d892969d025cd549
+        avatar = new Avatar(canvas, Singleton.getInstance().getPlayer1(), pirate);
+        avatar2 = new Avatar(canvas,Singleton.getInstance().getPlayer2(), naval);
         initializedMap1();
         initializedMap2();
         selectMap();
+
+        pl1Name.setText(avatar.getPlayer().getName());
+
+        if(!shotPlayer1){
+            pl1Shot.setFill(Color.WHITE);
+        }else{
+            pl1Shot.setFill(Color.BLACK);
+        }
+
+
+
+        switch (avatar.getLives()){
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+            case 3:
+                break;
+            case 4:
+                break;
+            case 5:
+                break;
+        }
     }
 
     public void selectMap(){

@@ -1,12 +1,10 @@
 package game.ui;
 
-import game.model.PlayerS;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 import java.util.ArrayList;
 

@@ -9,7 +9,7 @@
    <children>
       <ImageView fx:id="imageView" fitHeight="700.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="play" layoutX="305.0" layoutY="464.0" mnemonicParsing="false" onAction="#clickPlay" prefHeight="37.0" prefWidth="90.0" text="Play" />
-      <Button fx:id="board" layoutX="277.0" layoutY="531.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="150.0" text="Leaderboard" />
+      <Button fx:id="board" layoutX="277.0" layoutY="531.0" mnemonicParsing="false" onAction="#clickBoard" prefHeight="37.0" prefWidth="150.0" text="Leaderboard" />
       <TextField fx:id="player1" layoutX="168.0" layoutY="402.0" prefHeight="37.0" prefWidth="159.0" promptText="Player 1" />
       <TextField fx:id="player2" layoutX="373.0" layoutY="402.0" prefHeight="37.0" prefWidth="159.0" promptText="Player 2" />
       <Label layoutX="214.0" prefHeight="90.0" prefWidth="277.0" text="Boatmania" textFill="#ff7700">

@@ -1,5 +1,7 @@
 package game.model;
 
+import game.ui.PlayerS;
+
 public class Singleton {
 
     private static Singleton instance;

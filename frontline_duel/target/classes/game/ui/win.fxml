@@ -9,11 +9,9 @@
    <children>
       <ImageView fx:id="imageView" fitHeight="700.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true" />
       <Button fx:id="play" layoutX="105.0" layoutY="480.0" mnemonicParsing="false" onAction="#clickPlay" prefHeight="37.0" prefWidth="150.0" text="Play Again" />
-<<<<<<< HEAD
-      <Button fx:id="board" layoutX="446.0" layoutY="480.0" mnemonicParsing="false" prefHeight="37.0" prefWidth="150.0" text="Leaderboard" />
-=======
+
       <Button fx:id="board" layoutX="446.0" layoutY="480.0" mnemonicParsing="false" onAction="#clickBoard" prefHeight="37.0" prefWidth="150.0" text="Leaderboard" />
->>>>>>> dec8f491d31efdc81e9353f6d892969d025cd549
+
       <Label layoutX="262.0" layoutY="29.0" prefHeight="80.0" prefWidth="138.0" text="Winner">
          <font>
             <Font name="Verdana" size="36.0" />

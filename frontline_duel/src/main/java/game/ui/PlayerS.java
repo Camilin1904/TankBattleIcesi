@@ -1,10 +1,12 @@
-package game.model;
+package game.ui;
 
 public class PlayerS {
 
     private String name;
 
     private int wonGames;
+
+    private int position;
 
     public PlayerS(String name) {
         this.name = name;
@@ -31,5 +33,13 @@ public class PlayerS {
     }
     public void setGamesWon(int wonGames){
         this.wonGames =wonGames;
+    }
+
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
     }
 }

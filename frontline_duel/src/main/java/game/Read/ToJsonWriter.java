@@ -1,17 +1,6 @@
 package game.Read;
 
 
-import game.model.PlayerS;
-import game.ui.FrontlineDuel;
-
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-
 public class ToJsonWriter {
 
     /*public static void Write() {

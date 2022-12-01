@@ -114,4 +114,12 @@ public class MenuController implements Initializable {
         Stage stage = (Stage) play.getScene().getWindow();
         stage.close();
     }
+
+    @FXML
+    private void clickBoard(){
+        Stage stage = (Stage) play.getScene().getWindow();
+        stage.close();
+        FrontlineDuel.showWindow("leaderBoard.fxml");
+
+    }
 }

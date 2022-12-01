@@ -1,18 +1,6 @@
 package game.Read;
 
 
-import game.model.PlayerS;
-import game.ui.FrontlineDuel;
-
-
-import java.awt.Window.Type;
-import java.io.*;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-
-
-import javax.swing.JFileChooser;
-
 public class ToJsonReader {
 
 
