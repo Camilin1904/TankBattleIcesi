@@ -30,7 +30,7 @@ public class Avatar {
 
     private int lives;
 
-    private double SHOT_SPEED = 2;
+    protected double SHOT_SPEED = 2;
 
     protected Moveable objectAssigned;
 
@@ -175,6 +175,7 @@ public class Avatar {
             String uri = "file:"+FrontlineDuel.class.getResource("boom.png").getPath();
             tank = new Image(uri);
             System.out.println(tank.getUrl());
+            objectAssigned.murder();
         }
     }
 

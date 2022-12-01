@@ -56,8 +56,8 @@ public class PrimaryController implements Initializable {
     boolean Mpressed = false;
 
     boolean shotPlayer1 = false;
-
     boolean shotPlayer2 = false;
+    boolean shotEnemy = false;
 
 
     double WmomentumCounter = 0;
@@ -94,28 +94,12 @@ public class PrimaryController implements Initializable {
         canvas.setOnKeyPressed(this::onKeyPressed);
         canvas.setOnKeyReleased(this::onKeyReleased);
 
-        int[][] temp = new int[14][14];
-
-        for(int i=0; i<14; i++){
-            for (int j=0; j<14; j++){
-                temp[i][j] = 1;
-            }
-        }
-
         ctrl = new Controller(new Player("jiji"), new Player("jaja"));
-        ctrl.createScenario(temp, "2,2", "6,2", "5,5");
-
-        ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("2,2"));
-        ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("6,2"));
-        Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("5,5"));
 
         Enemy.getInstance().setMap(ctrl.getStage());
         Enemy.getInstance().setTarget1(ctrl.getPlayer1());
         Enemy.getInstance().setTarget2(ctrl.getPlayer2());
 
-
-        avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100);
-        avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300);
         initializedMap1();
         initializedMap2();
         selectMap();
@@ -124,16 +108,58 @@ public class PrimaryController implements Initializable {
     }
 
     public void selectMap(){
+        int[][] temp = new int[14][14];
 
         int map = (int) (Math.random() * 2 + 1);
         switch (map){
             case 1:
                 draw(map1);
+
+                String[] obstPos = {"3,4", "5,4", "8,4", "10,4", "3,10", "5,10", "8,10", "10,10"};
+
+                for(int i=0; i<14; i++){
+                    for (int j=0; j<14; j++){
+                        temp[i][j] = 1;
+                        for (String h : obstPos){
+                            if((i + "," + j).equals(h)){
+                                temp[i][j] = 0;
+                            }
+                        }
+                    }
+                }
+                ctrl.createScenario(temp, "2,2", "6,2", "1,4");
+
+                ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("2,2"));
+                ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("6,2"));
+                Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("1,4"));
+                avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100);
+                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300);
+                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 50);
                 break;
             case 2:
-                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 250);
 
-        draw(map2);
+                String[] obstPos2 = {"5,0","5,1","5,2","0,5","1,5","2,5","5,11","5,12","5,13","0,8","1,8","2,8","8,0","8,1","8,2","13,5","12,5","11,5","8,11","8,12","8,13","13,8","12,8","11,8"};
+                
+                for(int i=0; i<14; i++){
+                    for (int j=0; j<14; j++){
+                        temp[i][j] = 1;
+                        for (String h : obstPos2){
+                            if((i + "," + j).equals(h)){
+                                temp[i][j] = 0;
+                            }
+                        }
+                    }
+                }
+                
+                ctrl.createScenario(temp, "2,2", "6,2", "1,4");
+
+                ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("2,2"));
+                ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("6,2"));
+                Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("1,4"));
+                avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100);
+                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300);
+                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 200, 50);
+                draw(map2);
                 break;
             case 3:
                 //draw(map3);
@@ -345,13 +371,13 @@ public class PrimaryController implements Initializable {
                                 }
                                 if(Fpressed||shotPlayer1){
                                     if((avatar.getPosShot().x<=canvas.getWidth()&&avatar.getPosShot().y<=canvas.getHeight())&&(avatar.getPosShot().x>=0&&avatar.getPosShot().y>=0)){
-                                        drawShot(avatar, avatar2,1);
+                                        drawShot(avatar, avatar2,enemyAvatar,1);
                                     }
                                     Fpressed=false;
                                 }
                                 if(Gpressed||shotPlayer1){
                                     if((avatar.getPosShot().x<=canvas.getWidth()&&avatar.getPosShot().y<=canvas.getHeight())&&(avatar.getPosShot().x>=0&&avatar.getPosShot().y>=0)){
-                                        drawShot(avatar, avatar2,1);
+                                        drawShot(avatar, avatar2,enemyAvatar,1);
                                     }
                                     Gpressed=false;
                                 }
@@ -392,19 +418,21 @@ public class PrimaryController implements Initializable {
                                 }
                                 if(SPACEpressed||shotPlayer2){
                                     if((avatar2.getPosShot().x<=canvas.getWidth()&&avatar2.getPosShot().y<=canvas.getHeight())&&(avatar2.getPosShot().x>=0&&avatar2.getPosShot().y>=0)){
-                                        drawShot(avatar2, avatar,2);
+                                        drawShot(avatar2, avatar,enemyAvatar,2);
                                     }
                                     SPACEpressed=false;
                                 }
                                 if(Mpressed||shotPlayer2){
                                     if((avatar2.getPosShot().x<=canvas.getWidth()&&avatar2.getPosShot().y<=canvas.getHeight())&&(avatar2.getPosShot().x>=0&&avatar2.getPosShot().y>=0)){
-                                        drawShot(avatar2, avatar,2);
+                                        drawShot(avatar2, avatar,enemyAvatar,2);
                                     }
                                     Mpressed=false;
                                 }
                             }
 
-                            enemyAvatar.move();
+                            if(enemyAvatar.move()&&Enemy.getInstance().clearShot()||shotEnemy){
+                                drawShot(enemyAvatar, avatar, avatar2, 3);
+                            }
 
 
                         });
@@ -421,29 +449,77 @@ public class PrimaryController implements Initializable {
 
     }
 
-    private void drawShot(Avatar avatarWhoShot, Avatar avatarShoted, int player){
+    private void drawShot(Avatar avatarWhoShot, Avatar avatarShoted1, Avatar avatarShoted2, int player){
 
-        if(player==1)shotPlayer1=true;
-        if(player==2)shotPlayer2=true;
+        switch(player){
+            case(1):
+                shotPlayer1=true;
+                break;
+            case(2):
+                shotPlayer2=true;
+                break;
+            case(3):
+                shotEnemy=true;
+                break;
+        }
 
         boolean shot = true;
         avatarWhoShot.shot();
         avatarWhoShot.moveForwardShot();
 
         if((avatarWhoShot.getPosShot().x>canvas.getWidth()||avatarWhoShot.getPosShot().y>canvas.getHeight())||(avatarWhoShot.getPosShot().x<0||avatarWhoShot.getPosShot().y<0)){
-            if(player==1)shotPlayer1=false;
-            if(player==2)shotPlayer2=false;
+            switch(player){
+                case(1):
+                    shotPlayer1=false;
+                    break;
+                case(2):
+                    shotPlayer2=false;
+                    break;
+                case(3):
+                    shotEnemy=false;
+                    break;
+            }
         }
 
-        if(avatarWhoShot.getPosShot().x<=avatarShoted.getPos().x+25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
-                avatarWhoShot.getPosShot().x>=avatarShoted.getPos().x-25*Math.cos(Math.toRadians(avatarShoted.getPos().getAngle()))&&
-                avatarWhoShot.getPosShot().y-25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))<=avatarShoted.getPos().y&&
-                avatarWhoShot.getPosShot().y+25*Math.sin(Math.toRadians(avatarShoted.getPos().getAngle()))>=avatarShoted.getPos().y){
+        Avatar avatarShoted = null;
+
+        if(avatarWhoShot.getPosShot().x<=avatarShoted1.getPos().x+25*Math.cos(Math.toRadians(avatarShoted1.getPos().getAngle()))&&
+                avatarWhoShot.getPosShot().x>=avatarShoted1.getPos().x-25*Math.cos(Math.toRadians(avatarShoted1.getPos().getAngle()))&&
+                avatarWhoShot.getPosShot().y-25*Math.sin(Math.toRadians(avatarShoted1.getPos().getAngle()))<=avatarShoted1.getPos().y&&
+                avatarWhoShot.getPosShot().y+25*Math.sin(Math.toRadians(avatarShoted1.getPos().getAngle()))>=avatarShoted1.getPos().y){
             shot = false;
-            if(player==1)shotPlayer1=false;
-            if(player==2)shotPlayer2=false;
+            switch(player){
+                case(1):
+                    shotPlayer1=false;
+                    break;
+                case(2):
+                    shotPlayer2=false;
+                    break;
+                case(3):
+                    shotEnemy=false;
+                    break;
+            }
+            avatarShoted = avatarShoted1;
         }
-        if(!shot&&avatarShoted.getLives()>0){
+        else if(avatarWhoShot.getPosShot().x<=avatarShoted2.getPos().x+25*Math.cos(Math.toRadians(avatarShoted2.getPos().getAngle()))&&
+                    avatarWhoShot.getPosShot().x>=avatarShoted2.getPos().x-25*Math.cos(Math.toRadians(avatarShoted2.getPos().getAngle()))&&
+                    avatarWhoShot.getPosShot().y-25*Math.sin(Math.toRadians(avatarShoted2.getPos().getAngle()))<=avatarShoted2.getPos().y&&
+                    avatarWhoShot.getPosShot().y+25*Math.sin(Math.toRadians(avatarShoted2.getPos().getAngle()))>=avatarShoted2.getPos().y){
+                shot = false;
+                switch(player){
+                    case(1):
+                        shotPlayer1=false;
+                        break;
+                    case(2):
+                        shotPlayer2=false;
+                        break;
+                    case(3):
+                        shotEnemy=false;
+                        break;
+                }
+                avatarShoted = avatarShoted2;
+        }
+        if(!shot&&avatarShoted!=null&&avatarShoted.getLives()>0){
             avatarShoted.impact();
             long times = System.currentTimeMillis();
             gc.drawImage(image,avatarShoted.getPos().x - 25 ,avatarShoted.getPos().y - 25, 50,50);
@@ -454,16 +530,16 @@ public class PrimaryController implements Initializable {
     }
 
     public void initializedMap1(){
-        Obstacle ob = new Obstacle(175,125,50,canvas);
-        Obstacle ob2 = new Obstacle(175,250,50,canvas);
-        Obstacle ob3 = new Obstacle(175,375,50,canvas);
-        Obstacle ob4 = new Obstacle(175,500,50,canvas);
-        Obstacle ob5 = new Obstacle(475,125,50,canvas);
-        Obstacle ob6 = new Obstacle(475,250,50,canvas);
-        Obstacle ob7 = new Obstacle(475,375,50,canvas);
-        Obstacle ob8 = new Obstacle(475,500,50,canvas);
-        Obstacle ob9 = new Obstacle(475,625,50,canvas);
-        Obstacle ob10 = new Obstacle(175,625,50,canvas);
+        Obstacle ob = new Obstacle(200,150,50,canvas);
+        Obstacle ob2 = new Obstacle(200,250,50,canvas);
+        Obstacle ob3 = new Obstacle(200,400,50,canvas);
+        Obstacle ob4 = new Obstacle(200,500,50,canvas);
+        Obstacle ob5 = new Obstacle(500,150,50,canvas);
+        Obstacle ob6 = new Obstacle(500,250,50,canvas);
+        Obstacle ob7 = new Obstacle(500,400,50,canvas);
+        Obstacle ob8 = new Obstacle(500,500,50,canvas);
+        Obstacle ob9 = new Obstacle(500,650,50,canvas);
+        Obstacle ob10 = new Obstacle(200,650,50,canvas);
         map1.add(ob);
         map1.add(ob2);
         map1.add(ob3);

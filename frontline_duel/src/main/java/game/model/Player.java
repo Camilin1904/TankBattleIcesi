@@ -3,7 +3,6 @@ package game.model;
 import java.util.ArrayList;
 
 public class Player implements Moveable{
-    private String dir;
     private String name;
     private ArrayList<String> names;
     private double score;
@@ -101,7 +100,6 @@ public class Player implements Moveable{
     }
 
     public void clean(){
-        dir = null;
         position = null;
         posScore = null;
     }
@@ -111,5 +109,9 @@ public class Player implements Moveable{
     }
     public void setMap(ListGraph<String, Moveable> map) {
         this.map = map;
+    }
+
+    public void murder(){
+        position.setValue(null);
     }
 }

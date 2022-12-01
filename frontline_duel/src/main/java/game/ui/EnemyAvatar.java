@@ -13,17 +13,17 @@ public class EnemyAvatar extends Avatar{
     int adN = 0;
     String actualTargCoord = "";
     boolean firstPass = true;
-    boolean moving = false;
 
     public EnemyAvatar(Canvas canvas, Moveable character, int posX, int posY) {
         super(canvas, character, posX, posY);
+        actualTargCoord = Enemy.getInstance().getPosition().getId();
     }
 
     public void setMovement(){
         
     }
 
-    public void move(){
+    public boolean move(){
         Enemy.getInstance().updatePath();
         String[] targ = Enemy.getInstance().getTargetCoordinates().split(",");
         double amp = direction.getAmplitude();
@@ -32,41 +32,40 @@ public class EnemyAvatar extends Avatar{
         int difY = Integer.parseInt(targ[0])-Integer.parseInt(posi[0]);
         int difX = Integer.parseInt(targ[1])-Integer.parseInt(posi[1]);
         int addAngle = 0;
-
+        System.out.println(Enemy.getInstance().getPath());
         System.out.println(Enemy.getInstance().clearShot());
-        if(difX==1&&difY==0) angle = 0;
-        else if(difX==1&&difY==1) angle = 45;
-        else if(difX==0&&difY==1) angle = 90;
-        else if(difX==-1&&difY==1) angle = 135;
-        else if(difX==-1&&difY==0) angle = 180;
-        else if(difX==-1&&difY==-1) angle = 225;
-        else if(difX==0&&difY==-1) angle = 270;
-        else if(difX==1&&difY==-1) angle = 315;
+            if(difX==1&&difY==0) angle = 0;
+            else if(difX==1&&difY==1) angle = 45;
+            else if(difX==0&&difY==1) angle = 90;
+            else if(difX==-1&&difY==1) angle = 135;
+            else if(difX==-1&&difY==0) angle = 180;
+            else if(difX==-1&&difY==-1) angle = 225;
+            else if(difX==0&&difY==-1) angle = 270;
+            else if(difX==1&&difY==-1) angle = 315;
 
+        if(angle == (int)actAngle){
+            firstPass = false;
+            if(!Enemy.getInstance().clearShot()){
+                if(pos.x+direction.x>3&&pos.y+direction.y>3){
+                    pos.x += direction.x;
+                    pos.y += direction.y;
+                }
+                objectAssigned.move(pos.x, pos.y);
+                if(Enemy.getInstance().getPosition().getId().equals(actualTargCoord)) actualTargCoord = Enemy.getInstance().getTargetCoordinates();
+            }
+            return true;
 
-        /*System.out.println(angle + "**" + actAngle);
-        System.out.println("!" + Arrays.toString(targ));
-        System.out.println("¡" + Arrays.toString(posi));*/
-
-
-        if(angle == (int)actAngle&&!Enemy.getInstance().clearShot()){
-            //System.out.println(direction.x + "/" + direction.y);
-            //System.out.println(direction.y + "/" + direction.x);
-
-            pos.x += direction.x;
-            pos.y += direction.y;
-
-            objectAssigned.move(pos.x, pos.y);
         } 
         else{
+            System.out.println(angle + "()" + actAngle);
             if(angle>actAngle)actAngle += (adN = 1);
             else if (angle<actAngle)actAngle += (adN = -1);
             else actAngle += adN;
             
             direction.x = amp*Math.cos(Math.toRadians(actAngle));
             direction.y = amp*Math.sin(Math.toRadians(actAngle));
-
-            
+            setShot();
+            return false;
         }
 
         
