@@ -135,8 +135,6 @@ public class PrimaryController implements Initializable {
 
     private ArrayList<Obstacle> map2 = new ArrayList<>();
 
-    private ScoreboardS scoreboardS = new ScoreboardS();
-
 
 
 
@@ -471,9 +469,9 @@ public class PrimaryController implements Initializable {
                             if(avatar2.getLives()<=0 || avatar.getLives()<=0){
 
                                 if(avatar.getLives()==0){
-                                    scoreboardS.insert(avatar.getPlayer());
+                                    ScoreboardS.getInstance().insert(avatar.getPlayer());
                                 }else {
-                                    scoreboardS.insert(avatar2.getPlayer());
+                                    ScoreboardS.getInstance().insert(avatar2.getPlayer());
                                 }
 
                                 exit.set(true);
