@@ -235,7 +235,7 @@ public class PrimaryController implements Initializable {
                     }
                 }
                 
-                ctrl.createScenario(temp, "2,2", "6,2", "1,4");
+                ctrl.createScenario(temp, "2,2", "7,2", "1,4");
 
                 ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("2,2"));
                 ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("7,2"));
@@ -576,6 +576,7 @@ public class PrimaryController implements Initializable {
                     break;
                 case(3):
                     shotEnemy=false;
+                    enemyAvatar.setShooting(false);
                     break;
             }
         }
@@ -596,6 +597,7 @@ public class PrimaryController implements Initializable {
                     break;
                 case(3):
                     shotEnemy=false;
+                    //enemyAvatar.setShooting(false);
                     break;
             }
             avatarShoted = avatarShoted1;
@@ -614,6 +616,7 @@ public class PrimaryController implements Initializable {
                         break;
                     case(3):
                         shotEnemy=false;
+                        //enemyAvatar.setShooting(false);
                         break;
                 }
                 avatarShoted = avatarShoted2;

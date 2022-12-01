@@ -13,6 +13,7 @@ public class EnemyAvatar extends Avatar{
     int adN = 0;
     String actualTargCoord = "";
     boolean firstPass = true;
+    private boolean isShooting = false;
 
     public EnemyAvatar(Canvas canvas, Moveable character, int posX, int posY, PlayerS player, String uri) {
         super(canvas, character, posX, posY, player, uri);
@@ -53,6 +54,7 @@ public class EnemyAvatar extends Avatar{
                 objectAssigned.move(pos.x, pos.y);
                 if(Enemy.getInstance().getPosition().getId().equals(actualTargCoord)) actualTargCoord = Enemy.getInstance().getTargetCoordinates();
             }
+            if(!isShooting) setShot();
             return true;
 
         } 
@@ -64,7 +66,7 @@ public class EnemyAvatar extends Avatar{
             
             direction.x = amp*Math.cos(Math.toRadians(actAngle));
             direction.y = amp*Math.sin(Math.toRadians(actAngle));
-            setShot();
+            if(!isShooting) setShot();
             return false;
         }
 
@@ -89,10 +91,19 @@ public class EnemyAvatar extends Avatar{
         gc.setFill(Color.BLUE);
         gc.fillRect(posShot.x, posShot.y, 10,10);
         gc.restore();
+        isShooting = true;
     }
 
     public void moveForwardShot(){
         posShot.x += SHOT_SPEED*directShot.x;
         posShot.y += SHOT_SPEED*directShot.y;
     }
-}
+
+    public void setShooting(boolean isShooting) {
+        this.isShooting = isShooting;
+    }
+
+    public boolean getIsShooting(){
+        return isShooting;
+    }
+}  
