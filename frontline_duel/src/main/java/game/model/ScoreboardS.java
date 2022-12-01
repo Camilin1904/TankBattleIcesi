@@ -19,6 +19,7 @@ public class ScoreboardS {
     public void insert(PlayerS p){
 
         if(search(p)==null){
+            p.setGamesWon(1);
             scoreBoard.add(p);
         }else wonAGame(search(p));;
         scoreBoard.sort(new Comparator<PlayerS>() {
@@ -28,6 +29,9 @@ public class ScoreboardS {
             }
         });
         Collections.reverse(scoreBoard);
+        for(int i=0; i<scoreBoard.size(); i++){
+            scoreBoard.get(i).setPosition(i+1);
+        }
 
     }
 
