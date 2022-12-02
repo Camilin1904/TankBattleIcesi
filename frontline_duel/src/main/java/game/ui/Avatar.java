@@ -7,42 +7,48 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 
 import java.util.ArrayList;
+import game.model.*;
 
 public class Avatar {
 
+
+
     private Canvas canvas;
-    private GraphicsContext gc;
+    protected GraphicsContext gc;
 
     private Image tank;
 
-    private Vector pos;
+    protected Vector pos;
 
-    private Vector direction;
+    protected Vector direction;
 
-    private Vector posShot;
+    protected Vector posShot;
 
 
-    private Vector directShot;
+    protected Vector directShot;
 
     private int lives;
 
-    private double SHOT_SPEED = 2;
+    protected double SHOT_SPEED = 2;
+
+    protected Moveable objectAssigned;
 
     private Circle shape;
 
     private PlayerS player;
 
-    public Avatar(Canvas canvas, PlayerS player, String uri){
+    public Avatar(Canvas canvas, Moveable character, int posX, int posY, PlayerS player, String uri){
         this.canvas = canvas;
         gc = canvas.getGraphicsContext2D();
         tank = new Image(uri);
-        pos = new Vector(100,100);
-        posShot = new Vector(100,100);
-        direction = new Vector(2,2);
-        directShot = new Vector(2,2);
+        pos = new Vector(posX,posY);
+        posShot = new Vector(posX,posY );
+        direction = new Vector(1,1);
+        directShot = new Vector(1,1);
         lives = 5;
         this.player = player;
         shape = new Circle(-25,-25, 25);
+        objectAssigned = character;
     }
 
     public void draw(){
@@ -67,9 +73,8 @@ public class Avatar {
     }
 
     public boolean checkObstacleX(ArrayList<Obstacle> ob){
-
+        System.out.println(shape.getCenterX() +" --------- " + shape.getCenterY());
        for (int i = 0; i<ob.size();i++){
-           System.out.println(ob.get(i).getX() +" --------- " + ob.get(i).getY());
            if (shape.intersects(ob.get(i).getX()+10,ob.get(i).getY()+10,30,30)){
                return true;
            }
@@ -107,6 +112,7 @@ public class Avatar {
             pos.y += direction.y*mult;
 
         }
+        objectAssigned.move(pos.x, pos.y);
         shape.setCenterX(pos.x);
         shape.setCenterY(pos.y);
 
@@ -119,6 +125,7 @@ public class Avatar {
         if(pos.y - direction.y*mult-25>0 && pos.y - direction.y*mult+25<950 ){
             pos.y -= direction.y*mult;
         }
+        objectAssigned.move(pos.x, pos.y);
         shape.setCenterX(pos.x);
         shape.setCenterY(pos.y);
 
@@ -178,6 +185,7 @@ public class Avatar {
             String death = "file:"+FrontlineDuel.class.getResource("oil.png").getPath();
             tank = new Image(death);
             System.out.println(tank.getUrl());
+            objectAssigned.murder();
         }
     }
 

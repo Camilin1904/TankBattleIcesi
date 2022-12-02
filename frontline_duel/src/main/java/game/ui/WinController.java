@@ -4,6 +4,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -22,6 +23,13 @@ public class WinController implements Initializable {
 
     @FXML
     Button play = new Button();
+
+    public PlayerS player;
+
+    public static WinController instance =  new WinController();
+
+    @FXML
+    Label avatar = new Label();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -52,6 +60,8 @@ public class WinController implements Initializable {
                 "    -fx-font-weight: bold;\n" +
                 "    -fx-font-size: 1.1em;");
 
+        avatar.setText(instance.getPlayer().getName());
+
     }
 
     @FXML
@@ -67,5 +77,21 @@ public class WinController implements Initializable {
         stage.close();
         FrontlineDuel.showWindow("leaderBoard.fxml");
 
+    }
+
+    public void setPlayer(PlayerS player) {
+        this.player = player;
+    }
+
+    public PlayerS getPlayer() {
+        return player;
+    }
+
+    public WinController getInstance() {
+        return instance;
+    }
+
+    public void setInstance(WinController instance) {
+        WinController.instance = instance;
     }
 }

@@ -32,7 +32,7 @@ public class Obstacle {
         this.canvas = canvas;
         gc = canvas.getGraphicsContext2D();
 
-        String uri = "file:"+FrontlineDuel.class.getResource("roca.png").getPath();
+        String uri = "file:"+FrontlineDuel.class.getResource("roca1.png").getPath();
         image = new Image(uri);
 
         shape = new Rectangle(x,y, size,size);

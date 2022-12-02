@@ -25,4 +25,8 @@ public class Vector {
     public double getY() {
         return y;
     }
+
+    public double scalarProduct(Vector other){
+        return x*other.x + y*other.y;
+    }
 }

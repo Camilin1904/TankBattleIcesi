@@ -5,12 +5,8 @@ import java.util.*;
 public class Vertex<I extends Comparable<I>, T> implements Comparable<Vertex<I,T>>{
     private I id;
     private T value;
-    private Pair<Vertex<I, T>,Integer> up;
-    private Pair<Vertex<I, T>,Integer> right;
-    private Pair<Vertex<I, T>,Integer> down;
-    private Pair<Vertex<I, T>,Integer> left;
     private Vertex<I, T> parent;
-    private ArrayList<Pair<Vertex<I, T>,Integer>> adyacentVertex;
+    private HashMap<I,Pair<Vertex<I, T>,Integer>> adyacentVertex;
     private int distance;
     private int color;
     private int initial;
@@ -21,14 +17,14 @@ public class Vertex<I extends Comparable<I>, T> implements Comparable<Vertex<I,T
     
     public Vertex(T value){
         this.value = value;
-        adyacentVertex = new ArrayList<>();
+        adyacentVertex = new HashMap<>();
         hasKey = false;
     }
 
     public Vertex(I id, T value){
         this.id = id;
         this.value = value;
-        adyacentVertex = new ArrayList<>();
+        adyacentVertex = new HashMap<>();
         hasKey = false;
     }
 
@@ -55,48 +51,20 @@ public class Vertex<I extends Comparable<I>, T> implements Comparable<Vertex<I,T
     public void setParent(Vertex<I, T> parent) {
         this.parent = parent;
     }
-    public Pair<Vertex<I, T>,Integer> getDown() {
-        return down;
-    }
-    public void setDown(Pair<Vertex<I, T>,Integer> down) {;
-        this.down = down;
-        adyacentVertex.add(down);
-    }
-    public Pair<Vertex<I, T>,Integer> getLeft() {
-        return left;
-    }
-    public void setLeft(Pair<Vertex<I, T>,Integer> left) {
-        this.left = left;
-        adyacentVertex.add(left);
-    }
-    public Pair<Vertex<I, T>,Integer> getRight() {
-        return right;
-    }
-    public void setRight(Pair<Vertex<I, T>,Integer> right) {
-        this.right = right;
-        adyacentVertex.add(right);
-    }
-    public Pair<Vertex<I, T>,Integer> getUp() {
-        return up;
-    }
-    public void setUp(Pair<Vertex<I, T>,Integer> up) {
-        this.up = up;
-        adyacentVertex.add(up);
-    }
     public int getColor() {
         return color;
     }
     public void setColor(int color) {
         this.color = color;
     }
-    public ArrayList<Pair<Vertex<I, T>,Integer>> getAdyacentVertex() {
+    public HashMap<I,Pair<Vertex<I, T>,Integer>> getAdyacentVertex() {
         return adyacentVertex;
     }
-    public void setAdyacentVertex(ArrayList<Pair<Vertex<I, T>,Integer>> adyacentVertex) {
+    public void setAdyacentVertex(HashMap<I,Pair<Vertex<I, T>,Integer>> adyacentVertex) {
         this.adyacentVertex = adyacentVertex;
     }
     public void addAdyacentVertex(Pair<Vertex<I, T>,Integer> vertex){
-        adyacentVertex.add(vertex);
+        adyacentVertex.put(vertex.getA().getId(), vertex);
     }
     public int getEnd() {
         return end;

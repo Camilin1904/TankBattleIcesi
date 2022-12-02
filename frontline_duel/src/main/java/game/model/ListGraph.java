@@ -16,34 +16,11 @@ public class ListGraph<I extends Comparable<I>, T> extends VertexGraph<I, T>{
         vertexCollection.put(id, t);
     }
 
-    public void addConnection(I pointer, I pointed, String direction, int weight) {
-        
-        Pair<Vertex<I, T>,Integer> p = new Pair<Vertex<I, T>,Integer>(vertexCollection.get(pointed), weight);
-        
-        switch (direction){
-            case ("R"):
-                vertexCollection.get(pointer).setRight(p);
-                break;
-            case("L"):
-                vertexCollection.get(pointer).setLeft(p);
-                break;
-            case("U"):
-                vertexCollection.get(pointer).setUp(p);
-                break;
-            case("D"):
-                vertexCollection.get(pointer).setDown(p);
-                break;
-            default:
-                System.out.println("No");
-        }
-        
-    }
-
     @Override
     public void addConnection(I pointer, I pointed, int weight) {
         
         Pair<Vertex<I, T>,Integer> p = new Pair<Vertex<I, T>,Integer>(vertexCollection.get(pointed), weight);
-        vertexCollection.get(pointer).getAdyacentVertex().add(p);
+        vertexCollection.get(pointer).getAdyacentVertex().put(pointed, p);
         
     }
 
@@ -89,12 +66,12 @@ public class ListGraph<I extends Comparable<I>, T> extends VertexGraph<I, T>{
         queue.add(h);
         while(!queue.isEmpty()){
             Vertex<I, T> u = queue.remove(0);
-            for(Pair<Vertex<I, T>, Integer> n : u.getAdyacentVertex()){
-                if(n.getA().getColor()==0){
-                    n.getA().setColor(1);
-                    n.getA().setDistance(u.getDistance()+1);
-                    n.getA().setParent(u);
-                    queue.add(n.getA());
+            for(Map.Entry<I,Pair<Vertex<I, T>, Integer>> n : u.getAdyacentVertex().entrySet()){
+                if(n.getValue().getA().getColor()==0){
+                    n.getValue().getA().setColor(1);
+                    n.getValue().getA().setDistance(u.getDistance()+1);
+                    n.getValue().getA().setParent(u);
+                    queue.add(n.getValue().getA());
                 }
             }
             u.setColor(2);
@@ -120,10 +97,10 @@ public class ListGraph<I extends Comparable<I>, T> extends VertexGraph<I, T>{
         time++;
         vertex.setInitial(time);
         vertex.setColor(1);
-        for (Pair<Vertex<I, T>,Integer> n : vertex.getAdyacentVertex()){
-            if(n.getA().getColor()==0){
-                n.getA().setParent(vertex);
-                DFSVisit(n.getA(), time);
+        for (Map.Entry<I,Pair<Vertex<I, T>,Integer>> n : vertex.getAdyacentVertex().entrySet()){
+            if(n.getValue().getA().getColor()==0){
+                n.getValue().getA().setParent(vertex);
+                DFSVisit(n.getValue().getA(), time);
             }
         }
         vertex.setColor(2);
@@ -153,19 +130,16 @@ public class ListGraph<I extends Comparable<I>, T> extends VertexGraph<I, T>{
 
         vertexes.sort(comp);
         Stack<Vertex<I, T>> path = new Stack<>();
-        System.out.println(vertexes);
         Vertex<I, T> u = null;
         while(!vertexes.isEmpty()&&u!=end){
             u = vertexes.remove(0);
-            for (Pair<Vertex<I, T>,Integer> item : u.getAdyacentVertex()){
-                int dist = item.getB() + u.getDistance();
-                if(dist<item.getA().getDistance()){
-                    item.getA().setDistance(dist);
-                    item.getA().setParent(u);
+            for (Map.Entry<I,Pair<Vertex<I, T>,Integer>> item : u.getAdyacentVertex().entrySet()){
+                int dist = item.getValue().getB() + u.getDistance();
+                if(dist<item.getValue().getA().getDistance()){
+                    item.getValue().getA().setDistance(dist);
+                    item.getValue().getA().setParent(u);
                 }
             }
-            System.out.println("-" + u);
-            System.out.println("+" + start + "/" + end);
             vertexes.sort(comp);
         }
 
@@ -208,8 +182,8 @@ public class ListGraph<I extends Comparable<I>, T> extends VertexGraph<I, T>{
             dist.get(i.getKey()).replace(i.getKey(), 0);
         }
         for (Vertex<I,T> item : this){
-            for (Pair<Vertex<I,T>,Integer> i : item.getAdyacentVertex()){
-                dist.get(item.getId()).replace(i.getA().getId(), i.getB());
+            for (Map.Entry<I,Pair<Vertex<I,T>,Integer>> i : item.getAdyacentVertex().entrySet()){
+                dist.get(item.getId()).replace(i.getValue().getA().getId(), i.getValue().getB());
             }
         }
 
@@ -259,10 +233,10 @@ public class ListGraph<I extends Comparable<I>, T> extends VertexGraph<I, T>{
 
         while(!q.isEmpty()){
             Vertex<I,T> u = q.remove(0);
-            for(Pair<Vertex<I,T>, Integer> i : u.getAdyacentVertex()){
-                if(i.getA().getColor()==0&&i.getB()<i.getA().getDistance()){
-                    i.getA().setDistance(i.getB());
-                    i.getA().setParent(u);
+            for(Map.Entry<I,Pair<Vertex<I,T>, Integer>> i : u.getAdyacentVertex().entrySet()){
+                if(i.getValue().getA().getColor()==0&&i.getValue().getB()<i.getValue().getA().getDistance()){
+                    i.getValue().getA().setDistance(i.getValue().getB());
+                    i.getValue().getA().setParent(u);
                 }
             }
             u.setColor(2);
@@ -297,8 +271,8 @@ public class ListGraph<I extends Comparable<I>, T> extends VertexGraph<I, T>{
         }
         ArrayList<Edge<I,T>> edges = new ArrayList<>();
         for (Vertex<I,T> item : this){
-              for (Pair<Vertex<I,T>,Integer> i : item.getAdyacentVertex()){
-                edges.add(new Edge<>(item, i.getA(), i.getB()));
+              for (Map.Entry<I,Pair<Vertex<I,T>,Integer>> i : item.getAdyacentVertex().entrySet()){
+                edges.add(new Edge<>(item, i.getValue().getA(), i.getValue().getB()));
             }
         }
         edges.sort(new Comparator<Edge<I,T>>() {
@@ -323,49 +297,6 @@ public class ListGraph<I extends Comparable<I>, T> extends VertexGraph<I, T>{
         return A;
     }
 
-    public static void main(String[] args) {
-        ListGraph<String, String> g = new ListGraph<>();
-        /*g.addVertex("1", "a");
-        g.addVertex("2", "b");
-        g.addVertex("3", "c");
-        g.addVertex("4", "d");
-        g.addConnection("1", "3", "R", -2);
-        g.addConnection("2", "1", "R", 4);
-        g.addConnection("2", "3", "R", 3);
-        g.addConnection("3", "4", "R", 2);
-        g.addConnection("4", "2", "R", -1);
-        /*g.addConnection("b", "d", "R", 3);
-        g.addConnection("d", "b", "R", 3);
-        System.out.println(g.Kruskal());
-        System.out.println(g.floydWarshall());*/
-
-        g.addVertex("SF", "SF");
-        g.addVertex("CH", "CH");
-        g.addVertex("DE", "DE");
-        g.addVertex("NY", "NY");
-        g.addVertex("AT", "AT");
-        g.addConnection("SF", "NY", "R", 2000);
-        g.addConnection("NY", "SF", "R", 2000);
-        g.addConnection("SF", "AT", "R", 2200);
-        g.addConnection("AT", "SF", "R", 2200);
-        g.addConnection("NY", "AT", "R", 800);
-        g.addConnection("AT", "NY", "R", 800);
-        g.addConnection("NY", "CH", "R", 1000);
-        g.addConnection("CH", "NY", "R", 1000);
-        g.addConnection("NY", "DE", "R", 1600);
-        g.addConnection("DE", "NY", "R", 1600);
-        g.addConnection("DE", "SF", "R", 900);
-        g.addConnection("SF", "DE", "R", 900);
-        g.addConnection("SF", "CH", "R", 1200);
-        g.addConnection("CH", "SF", "R", 1200);
-        g.addConnection("DE", "CH", "R", 1300);
-        g.addConnection("CH", "DE", "R", 1300);
-        g.addConnection("AT", "CH", "R", 700);
-        g.addConnection("CH", "AT", "R", 700);
-
-        System.out.println(g.prim("AT"));
-    }
-
     public boolean checkAllBlack(){
         boolean j = true;
         for(Vertex<I,T> i : this){
@@ -375,5 +306,12 @@ public class ListGraph<I extends Comparable<I>, T> extends VertexGraph<I, T>{
             }
         }
         return j;
+    }
+
+    public void setAll1(I id){
+        Vertex<I, T> th = searchVertex(id);
+        for(Map.Entry<I,Pair<Vertex<I, T>,Integer>> i : th.getAdyacentVertex().entrySet()){
+            i.getValue().getA().getAdyacentVertex().get(id).setB(1);
+        }
     }
 }

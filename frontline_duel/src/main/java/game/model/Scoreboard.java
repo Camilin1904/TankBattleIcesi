@@ -11,6 +11,8 @@ public class Scoreboard {
 
     }
 
+
+
     public void insert(Player player, Player current) {
         if(player.getScore()==0) return;
         if (player.getScore() == current.getScore()) {
