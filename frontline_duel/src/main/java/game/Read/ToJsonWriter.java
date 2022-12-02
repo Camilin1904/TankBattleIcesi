@@ -23,8 +23,8 @@ public class ToJsonWriter {
 
 
         try {
-
-            File file = new File(".\\frontline_duel\\src\\main\\resources\\game\\ui\\players.txt");
+            String path = FrontlineDuel.class.getResource("players.txt").getPath();
+            File file = new File(path);
             FileOutputStream fos = new FileOutputStream(file);
             fos.write( json.getBytes(StandardCharsets.UTF_8) );
             fos.close();

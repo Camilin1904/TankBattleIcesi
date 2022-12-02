@@ -50,7 +50,8 @@ public class MenuController implements Initializable {
     public void ReproducirSonido(){
 
         try {
-            File file = new File(".\\frontline_duel\\src\\main\\resources\\game\\ui\\opening.wav");
+            String path = FrontlineDuel.class.getResource("opening.wav").getPath();
+            File file = new File(path);
             System.out.println(file.exists());
             System.out.println(file.getAbsolutePath());
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file.getAbsoluteFile());

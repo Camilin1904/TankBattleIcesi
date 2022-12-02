@@ -88,10 +88,12 @@ public class EnemyAvatar extends Avatar{
     }
 
     public void shot(){
-        gc.setFill(Color.BLUE);
-        gc.fillRect(posShot.x, posShot.y, 10,10);
-        gc.restore();
-        isShooting = true;
+        if(super.getLives()>0){
+            gc.setFill(Color.BLUE);
+            gc.fillRect(posShot.x, posShot.y, 10,10);
+            gc.restore();
+            isShooting = true; 
+        }
     }
 
     public void moveForwardShot(){

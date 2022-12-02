@@ -225,6 +225,7 @@ public class PrimaryController implements Initializable {
                 p1life3.setImage(heartEmpty);
                 p1life4.setImage(heartEmpty);
                 p1life5.setImage(heartEmpty);
+                avatar2.setCircle(1000, 1000);
                 break;
             case 1:
                 p1life1.setImage(heartFill);
@@ -260,6 +261,7 @@ public class PrimaryController implements Initializable {
                 p1life3.setImage(heartFill);
                 p1life4.setImage(heartFill);
                 p1life5.setImage(heartFill);
+                avatar.setCircle(1000, 1000);
                 break;
         }
 
@@ -270,6 +272,7 @@ public class PrimaryController implements Initializable {
                 p2life3.setImage(heartEmpty);
                 p2life4.setImage(heartEmpty);
                 p2life5.setImage(heartEmpty);
+                avatar2.setCircle(1000, 1000);
                 break;
             case 1:
                 p2life1.setImage(heartFill);
@@ -305,6 +308,7 @@ public class PrimaryController implements Initializable {
                 p2life3.setImage(heartFill);
                 p2life4.setImage(heartFill);
                 p2life5.setImage(heartFill);
+                avatar2.setCircle(1000, 1000);
                 break;
         }
 
@@ -375,14 +379,14 @@ public class PrimaryController implements Initializable {
                         }
                     }
                 }
-                ctrl.createScenario(temp, "2,2", "6,2", "1,4");
+                ctrl.createScenario(temp, "2,2", "2,12", "7,7");
 
                 ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("2,2"));
-                ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("6,2"));
-                Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("1,4"));
+                ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("2,12"));
+                Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("7,7"));
                 avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100, Singleton.getInstance().getPlayer1(), pirate);
-                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 300,Singleton.getInstance().getPlayer2(), naval);
-                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 250, 50,Singleton.getInstance().getEnemy(), cpu);
+                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 600, 100,Singleton.getInstance().getPlayer2(), naval);
+                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 350, 350,Singleton.getInstance().getEnemy(), cpu);
                 player1Name.setText(avatar.getPlayer().getName());
                 player2Name.setText(avatar2.getPlayer().getName());
                 initializedMap1();
@@ -402,14 +406,14 @@ public class PrimaryController implements Initializable {
                     }
                 }
                 
-                ctrl.createScenario(temp, "2,2", "7,2", "1,4");
+                ctrl.createScenario(temp, "7,2", "7,12", "7,7");
 
-                ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("2,2"));
-                ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("7,2"));
-                Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("1,4"));
-                avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 100, Singleton.getInstance().getPlayer1(), pirate);
-                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 100, 350,Singleton.getInstance().getPlayer2(), naval);
-                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 200, 50,Singleton.getInstance().getEnemy(), cpu);
+                ctrl.getPlayer1().setPosition(ctrl.getStage().searchVertex("7,2"));
+                ctrl.getPlayer2().setPosition(ctrl.getStage().searchVertex("7,12"));
+                Enemy.getInstance().setPosition(ctrl.getStage().searchVertex("7,7"));
+                avatar = new Avatar(canvas, ctrl.getPlayer1(), 100, 350, Singleton.getInstance().getPlayer1(), pirate);
+                avatar2 = new Avatar(canvas, ctrl.getPlayer2(), 600, 350,Singleton.getInstance().getPlayer2(), naval);
+                enemyAvatar = new EnemyAvatar(canvas, Enemy.getInstance(), 350, 350,Singleton.getInstance().getEnemy(), cpu);
                 draw(map2);
                 player1Name.setText(avatar.getPlayer().getName());
                 player2Name.setText(avatar2.getPlayer().getName());
@@ -640,7 +644,7 @@ public class PrimaryController implements Initializable {
                                         SmomentumCounter = Spressed? MOVEMENT_CONSTANT: SmomentumCounter-0.1;
                                     }else {
                                         double variable = 1.5;
-                                        avatar.moveBackward(variable);
+                                        avatar.moveForward(variable);
                                         SmomentumCounter = 0;
                                     }
 

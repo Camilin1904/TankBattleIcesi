@@ -196,4 +196,13 @@ public class Avatar {
     public void setPlayer(PlayerS player) {
         this.player = player;
     }
+
+    public Circle getCircle(){
+        return shape;
+    }
+
+    public void setCircle(int x, int y){
+        shape.setCenterX(x);
+        shape.setCenterY(y);
+    }
 }

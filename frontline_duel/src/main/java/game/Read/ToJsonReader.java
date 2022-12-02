@@ -14,7 +14,8 @@ public class ToJsonReader {
     public static ArrayList<PlayerS> readP() {
         ArrayList<PlayerS> people = new ArrayList<>();
         try {
-            File file = new File(".\\frontline_duel\\src\\main\\resources\\game\\ui\\players.txt");
+            String path = FrontlineDuel.class.getResource("players.txt").getPath();
+            File file = new File(path);
             //File file = new File(uri);
             FileInputStream fis = new FileInputStream(file);
 
