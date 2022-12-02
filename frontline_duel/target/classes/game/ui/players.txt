@@ -1,1 +1,1 @@
-[{"name":"Samuel","wonGames":2,"position":1},{"name":"b","wonGames":1,"position":2},{"name":"a","wonGames":1,"position":3}]
+[{"name":"Samuel","wonGames":3,"position":1},{"name":"a","wonGames":1,"position":2},{"name":"b","wonGames":1,"position":3}]
