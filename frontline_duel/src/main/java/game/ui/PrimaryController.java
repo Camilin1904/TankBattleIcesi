@@ -590,6 +590,7 @@ public class PrimaryController implements Initializable {
                                     exit.set(true);
                                     Stage stage = (Stage) canvas.getScene().getWindow();
                                     stage.close();
+                                    WinController.instance.setPlayer(avatar.getPlayer());
                                     ScoreboardS.getInstance().insert(avatar.getPlayer());
                                     FrontlineDuel.showWindow("win.fxml");
                                 }else if (avatar.getLives()<=0&&enemyAvatar.getLives()<=0){

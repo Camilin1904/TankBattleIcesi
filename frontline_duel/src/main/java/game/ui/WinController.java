@@ -8,8 +8,10 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -30,6 +32,9 @@ public class WinController implements Initializable {
 
     @FXML
     Label avatar = new Label();
+
+    @FXML
+    Label winner = new Label();
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -61,6 +66,7 @@ public class WinController implements Initializable {
                 "    -fx-font-size: 1.1em;");
 
         avatar.setText(instance.getPlayer().getName());
+        setFond();
 
     }
 
@@ -93,5 +99,13 @@ public class WinController implements Initializable {
 
     public void setInstance(WinController instance) {
         WinController.instance = instance;
+    }
+
+    InputStream is1 = getClass().getResourceAsStream("MP16REG.ttf");
+    private Font pixeman1 = Font.loadFont(is1, 40);
+
+    public void setFond(){
+        winner.setFont(pixeman1);
+        avatar.setFont(pixeman1);
     }
 }

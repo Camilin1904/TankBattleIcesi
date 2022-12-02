@@ -9,14 +9,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
-
+import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 
@@ -41,6 +43,9 @@ public class ScoreboardController implements Initializable {
     private TableColumn<PlayerS, Integer> score;
 
     private ScoreboardS scoreboard;
+
+    @FXML
+    Label labe = new Label();
 
     @FXML
     Button exit = new Button();
@@ -88,6 +93,7 @@ public class ScoreboardController implements Initializable {
         score.setCellValueFactory(new PropertyValueFactory<>("wonGames"));
 
         actualize();
+        setFond();
         System.out.println(list.size());
         tableView.setItems(list);
         System.out.println("Se supone que ya");
@@ -120,7 +126,13 @@ public class ScoreboardController implements Initializable {
         stage.close();
     }
 
+    InputStream is1 = getClass().getResourceAsStream("MP16REG.ttf");
+    private Font pixeman1 = Font.loadFont(is1, 55);
 
+    public void setFond(){
+        labe.setFont(pixeman1);
+
+    }
 
 
 

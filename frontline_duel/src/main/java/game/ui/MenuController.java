@@ -5,17 +5,20 @@ import game.model.Singleton;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import javafx.scene.control.Button;
+import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -40,6 +43,9 @@ public class MenuController implements Initializable {
     TextField player2 = new TextField();
 
     private ScoreboardS score = ScoreboardS.getInstance();
+
+    @FXML
+    Label boat = new Label();
 
     public void ReproducirSonido(){
 
@@ -95,7 +101,8 @@ public class MenuController implements Initializable {
                 "    -fx-padding: 12 30 12 30;\n" +
                 "    -fx-text-fill: white;\n" +
                 "    -fx-font-size: 12px;\n");
-        //ReproducirSonido();
+        setFond();
+        ReproducirSonido();
     }
 
     @FXML
@@ -124,6 +131,14 @@ public class MenuController implements Initializable {
         Stage stage = (Stage) play.getScene().getWindow();
         stage.close();
         FrontlineDuel.showWindow("leaderBoard.fxml");
+
+    }
+
+    InputStream is1 = getClass().getResourceAsStream("MP16REG.ttf");
+    private Font pixeman1 = Font.loadFont(is1, 55);
+
+    public void setFond(){
+        boat.setFont(pixeman1);
 
     }
 }

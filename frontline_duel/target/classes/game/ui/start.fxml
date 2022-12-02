@@ -12,7 +12,7 @@
       <Button fx:id="board" layoutX="277.0" layoutY="531.0" mnemonicParsing="false" onAction="#clickBoard" prefHeight="37.0" prefWidth="150.0" text="Leaderboard" />
       <TextField fx:id="player1" layoutX="168.0" layoutY="402.0" prefHeight="37.0" prefWidth="159.0" promptText="Player 1" />
       <TextField fx:id="player2" layoutX="373.0" layoutY="402.0" prefHeight="37.0" prefWidth="159.0" promptText="Player 2" />
-      <Label layoutX="214.0" prefHeight="90.0" prefWidth="277.0" text="Boatmania" textFill="#ff7700">
+      <Label fx:id="boat" alignment="CENTER" contentDisplay="CENTER" layoutX="214.0" layoutY="53.0" prefHeight="90.0" prefWidth="277.0" text="Boatmania" textAlignment="CENTER" textFill="#ff7700">
          <font>
             <Font name="Verdana" size="50.0" />
          </font>
